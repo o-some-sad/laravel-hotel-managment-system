@@ -3,8 +3,8 @@ import { ref } from 'vue';
 import { Link } from '@inertiajs/vue3';
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/composables/useTheme";
-import Navbar from '@/Components/Navbar.vue';
-import Footer from '@/Components/Footer.vue';
+import Navbar from '@/components/Navbar.vue';
+import Footer from '@/components/Footer.vue';
 import {
   Card,
   CardContent,
