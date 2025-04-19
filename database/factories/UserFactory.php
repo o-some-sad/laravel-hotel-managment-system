@@ -29,6 +29,15 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
+            'national_id' => fake()->unique()->numerify('##########'),
+            'avatar_image' => null,
+            'role' => fake()->randomElement(['admin', 'manager', 'receptionist', 'client']),
+            'mobile' => fake()->phoneNumber(),
+            'country' => fake()->country(),
+            'gender' => fake()->randomElement(['male', 'female']),
+            'last_login_at' => fake()->dateTimeThisMonth(),
+            'approved_at' => fake()->dateTimeThisMonth(),
+            'approved_by' => null,
         ];
     }
 
@@ -39,6 +48,46 @@ class UserFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
+        ]);
+    }
+
+    /**
+     * Configure the model factory to create an admin user.
+     */
+    public function admin(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => 'admin',
+        ]);
+    }
+
+    /**
+     * Configure the model factory to create a manager user.
+     */
+    public function manager(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => 'manager',
+        ]);
+    }
+
+    /**
+     * Configure the model factory to create a receptionist user.
+     */
+    public function receptionist(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => 'receptionist',
+        ]);
+    }
+
+    /**
+     * Configure the model factory to create a client user.
+     */
+    public function client(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => 'client',
         ]);
     }
 }

@@ -36,10 +36,9 @@ import { Facebook, Twitter, Instagram, Linkedin, Mail } from 'lucide-vue-next';
           <h4 class="font-bold mb-4">Quick Links</h4>
           <ul class="space-y-2">
             <li><Link href="/" class="text-muted-foreground hover:text-foreground transition-colors">Home</Link></li>
-            <li><Link href="#services" class="text-muted-foreground hover:text-foreground transition-colors">Services</Link></li>
-            <li><Link href="#testimonials" class="text-muted-foreground hover:text-foreground transition-colors">Testimonials</Link></li>
-            <li><Link href="#contact" class="text-muted-foreground hover:text-foreground transition-colors">Contact</Link></li>
-            <li><Link href="/about" class="text-muted-foreground hover:text-foreground transition-colors">About Us</Link></li>
+            <li><Link href="/#services" class="text-muted-foreground hover:text-foreground transition-colors">Services</Link></li>
+            <li><Link href="/#testimonials" class="text-muted-foreground hover:text-foreground transition-colors">Testimonials</Link></li>
+            <li><Link href="/#contact" class="text-muted-foreground hover:text-foreground transition-colors">Contact</Link></li>
           </ul>
         </div>
         

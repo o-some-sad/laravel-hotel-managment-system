@@ -62,9 +62,9 @@ defineProps({
       <!-- Desktop Navigation -->
       <nav class="hidden md:flex items-center gap-6">
         <Link href="/" class="text-sm font-medium transition-colors hover:text-primary">Home</Link>
-        <Link href="#services" class="text-sm font-medium transition-colors hover:text-primary">Services</Link>
-        <Link href="#testimonials" class="text-sm font-medium transition-colors hover:text-primary">Testimonials</Link>
-        <Link href="#contact" class="text-sm font-medium transition-colors hover:text-primary">Contact</Link>
+        <Link href="/#services" class="text-sm font-medium transition-colors hover:text-primary">Services</Link>
+        <Link href="/#testimonials" class="text-sm font-medium transition-colors hover:text-primary">Testimonials</Link>
+        <Link href="/#contact" class="text-sm font-medium transition-colors hover:text-primary">Contact</Link>
       </nav>
       
       <div class="flex items-center gap-4">
