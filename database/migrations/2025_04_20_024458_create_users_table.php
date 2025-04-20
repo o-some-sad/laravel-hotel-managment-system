@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('national_id')->nullable()->unique();
             $table->string('avatar_image')->nullable();
             $table->string('mobile')->nullable();
-            $table->char('country_code', 2)->nullable();
+            $table->char('country_code', 3)->nullable();
             $table->enum('gender', ['male', 'female'])->nullable();
             $table->timestamp('last_login_at')->nullable();
             $table->timestamp('approved_at')->nullable();

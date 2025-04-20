@@ -4,6 +4,8 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\File;
+use Lwwcas\LaravelCountries\Models\Country;
+
 
 
 class ClientRegisterRequest extends FormRequest
@@ -13,7 +15,7 @@ class ClientRegisterRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -27,7 +29,11 @@ class ClientRegisterRequest extends FormRequest
             'name' => 'required|string|max:255',
             'email' => 'required|string|lowercase|email|max:255|unique:users,email',
             'password' => ['required', 'confirmed', 'min:6'],
-            'country' => 'required|string|max:255',
+            'country' => [
+                'required',
+                'integer',
+                'exists:lc_countries,id',
+            ],
             'gender' => 'required|in:male,female',
             'avatar_image' => [
                 'nullable',

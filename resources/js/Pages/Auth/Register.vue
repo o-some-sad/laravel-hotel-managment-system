@@ -9,6 +9,7 @@ import Footer from '@/components/Footer.vue';
 
 defineProps({
     auth: Object,
+    countries: Array,
 });
 
 const form = useForm({
@@ -23,14 +24,22 @@ const form = useForm({
 
 const submit = () => {
     form.post(route('register'), {
+        onError: () => alert('There was an error while submitting the form. Please try again!'),
         onFinish: () => form.reset('password', 'password_confirmation'),
+        // onFinish: () => {form.reset();},
+        onSuccess: () => {
+            // Redirect to login page after successful registration
+            Inertia.visit(route('login'));
+        },
     });
+
 };
 </script>
 
 <template>
 
     <div class="min-h-screen flex flex-col bg-background">
+
         <Head title="Register" />
         <Navbar :auth="auth" />
 
@@ -38,73 +47,94 @@ const submit = () => {
             <Card class="w-full max-w-md">
                 <CardHeader>
                     <CardTitle class="text-2xl font-bold text-center">Create an Account</CardTitle>
-                    <CardDescription class="text-center">Sign up to get started with our hotel management system</CardDescription>
+                    <CardDescription class="text-center">Sign up to get started with our hotel management system
+                    </CardDescription>
                 </CardHeader>
 
                 <CardContent>
-                    <form @submit.prevent="submit" class="space-y-4" >
+                    <form @submit.prevent="submit" class="space-y-4">
                         <div class="space-y-2">
-                            <Label for="name">Name</Label>
-                            <Input
-                                id="name"
-                                type="text"
-                                v-model="form.name"
-                                required
-                                autofocus
-                                autocomplete="name"
-                                :class="{ 'border-destructive': form.errors.name }"
-                            />
+                            <Label for="name">Name <span class="text-destructive">*</span></Label>
+                            <Input id="name" type="text" v-model="form.name" required autofocus autocomplete="name"
+                                :class="{ 'border-destructive': form.errors.name }" />
                             <p v-if="form.errors.name" class="text-sm text-destructive mt-1">
                                 {{ form.errors.name }}
                             </p>
                         </div>
 
                         <div class="space-y-2">
-                            <Label for="email">Email</Label>
-                            <Input
-                                id="email"
-                                type="email"
-                                v-model="form.email"
-                                required
-                                autocomplete="username"
-                                :class="{ 'border-destructive': form.errors.email }"
-                            />
+                            <Label for="email">Email <span class="text-destructive">*</span></Label>
+                            <Input id="email" type="email" v-model="form.email" required autocomplete="username"
+                                :class="{ 'border-destructive': form.errors.email }" />
                             <p v-if="form.errors.email" class="text-sm text-destructive mt-1">
                                 {{ form.errors.email }}
                             </p>
                         </div>
 
                         <div class="space-y-2">
-                            <Label for="password">Password</Label>
-                            <Input
-                                id="password"
-                                type="password"
-                                v-model="form.password"
-                                required
-                                autocomplete="new-password"
-                                :class="{ 'border-destructive': form.errors.password }"
-                            />
+                            <Label for="password">Password <span class="text-destructive">*</span></Label>
+                            <Input id="password" type="password" v-model="form.password" required
+                                autocomplete="new-password" :class="{ 'border-destructive': form.errors.password }" />
                             <p v-if="form.errors.password" class="text-sm text-destructive mt-1">
                                 {{ form.errors.password }}
                             </p>
                         </div>
 
                         <div class="space-y-2">
-                            <Label for="password_confirmation">Confirm Password</Label>
-                            <Input
-                                id="password_confirmation"
-                                type="password"
-                                v-model="form.password_confirmation"
-                                required
-                                autocomplete="new-password"
-                                :class="{ 'border-destructive': form.errors.password_confirmation }"
-                            />
+                            <Label for="password_confirmation">Confirm Password <span
+                                    class="text-destructive">*</span></Label>
+                            <Input id="password_confirmation" type="password" v-model="form.password_confirmation"
+                                required autocomplete="new-password"
+                                :class="{ 'border-destructive': form.errors.password_confirmation }" />
                             <p v-if="form.errors.password_confirmation" class="text-sm text-destructive mt-1">
                                 {{ form.errors.password_confirmation }}
                             </p>
                         </div>
+                        <!-- Country Dropdown -->
+                        <div class="space-y-2">
+                            <Label for="country">Country <span class="text-destructive">*</span></Label>
+                            <select id="country" v-model="form.country" required class="w-full rounded px-3 py-2 border focus:outline-none focus:ring-2 focus:ring-primary
+           bg-white text-black dark:bg-gray-800 dark:text-white dark:border-gray-600"
+                                :class="{ 'border-destructive': form.errors.country }">
+                                <option value="" disabled>Select a country</option>
+                                <option v-for="country in countries" :key="country.id" :value="country.id">
+                                    {{ country.official_name }}
+                                </option>
+                            </select>
+                            <p v-if="form.errors.country" class="text-sm text-destructive mt-1">
+                                {{ form.errors.country }}
+                            </p>
+                        </div>
 
-                        <Button type="submit" class="w-full" :disabled="form.processing">
+                        <!-- Gender Dropdown -->
+                        <div class="space-y-2">
+                            <Label for="gender">Gender <span class="text-destructive">*</span></Label>
+                            <select id="gender" v-model="form.gender"
+                            class="w-full rounded px-3 py-2 border focus:outline-none focus:ring-2 focus:ring-primary
+                            bg-white text-black dark:bg-gray-800 dark:text-white dark:border-gray-600"
+                            :class="{ 'border-destructive': form.errors.gender }" required>
+                                <option value="" disabled>Select gender</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                            </select>
+                            <p v-if="form.errors.gender" class="text-sm text-destructive mt-1">
+                                {{ form.errors.gender }}
+                            </p>
+                        </div>
+
+                        <!-- Avatar Upload -->
+                        <div class="space-y-2">
+                            <Label for="avatar_image">Avatar <span
+                            class="text-muted-foreground" >(optional)</span></Label>
+
+                            <Input id="avatar_image" type="file" @change="handleAvatarUpload" accept="image/jpeg" />
+                            <p v-if="form.errors.avatar_image" class="text-sm text-destructive mt-1">
+                                {{ form.errors.avatar_image }}
+                            </p>
+                        </div>
+
+                        <Button type="submit" class="w-full py-2 px-4 bg-primary text-white font-semibold rounded hover:bg-primary-dark transition
+                        dark:bg-blue-600 dark:hover:bg-blue-700" :disabled="form.processing">
                             {{ form.processing ? 'Creating account...' : 'Create account' }}
                         </Button>
                     </form>
@@ -114,7 +144,7 @@ const submit = () => {
                     <p class="text-center text-sm text-muted-foreground">
                         Already have an account?
                         <Link :href="route('login')" class="text-primary hover:underline font-medium">
-                            Sign in
+                        Sign in
                         </Link>
                     </p>
                 </CardFooter>

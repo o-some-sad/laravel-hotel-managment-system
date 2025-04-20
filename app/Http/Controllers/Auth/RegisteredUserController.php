@@ -13,6 +13,8 @@ use Illuminate\Validation\Rules;
 use Inertia\Inertia;
 use App\Http\Requests\ClientRegisterRequest;
 use Inertia\Response;
+use Lwwcas\LaravelCountries\Models\Country;
+
 
 class RegisteredUserController extends Controller
 {
@@ -21,7 +23,15 @@ class RegisteredUserController extends Controller
      */
     public function create(): Response
     {
-        return Inertia::render('Auth/Register');
+        $countries = Country::select('id', 'official_name')
+        ->where('is_visible', 1)
+        ->get();
+
+
+        return Inertia::render('Auth/Register', [
+            'countries' => $countries,
+            'errors' => session('errors')
+        ]);
     }
 
     /**
@@ -31,20 +41,19 @@ class RegisteredUserController extends Controller
      */
     public function store(ClientRegisterRequest $request): RedirectResponse
     {
-
-        $avatarPath = null;
-        if ($request->hasFile('avatar_image')) {
-            $avatarPath = $request->file('avatar_image')->store('avatars', 'public');
-        }
+        $avatarPath = $request->hasFile('avatar_image')
+        ? $request->file('avatar_image')->store('avatars', 'public')
+        : 'avatars/default.jpg';
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => bcrypt($request['password']),
-            'country' => $request['country'],
+            'country_code' => $request['country'],
             'gender' => $request['gender'],
             'avatar_image' => $avatarPath,
         ]);
+        $user->assignRole('client');
 
         event(new Registered($user));
 
