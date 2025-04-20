@@ -10,7 +10,7 @@ class Floor extends Model
 {
     use HasFactory;
     
-    protected $fillable = ['name', 'created_by'];
+    protected $fillable = ['name', 'number','created_by'];
 
     protected static function booted()
     {
@@ -19,6 +19,7 @@ class Floor extends Model
 
     public function delete()
     {
+    // can't delete a floor if there are rooms in it
     if ($this->rooms()->exists()) {
         throw new \Exception('Cannot delete floor with rooms');
         }
@@ -27,11 +28,13 @@ class Floor extends Model
 
     public function creator()
     {
+        // floor belongs to which manager (who created this floor)
         return $this->belongsTo(User::class, 'created_by');
     }
 
     public function rooms()
     {
+    // one floor has many rooms
         return $this->hasMany(Room::class);
     }
 }
