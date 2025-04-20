@@ -2,9 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
+use App\Models\User;
+use Spatie\Permission\Models\Role;
 
 class AdminSeeder extends Seeder
 {
@@ -13,23 +14,21 @@ class AdminSeeder extends Seeder
      */
     public function run(): void
     {
-        // Check if an admin user already exists
-        $adminExists = User::where('role', 'admin')->exists();
+        Role::firstOrCreate(['name' => 'Admin', 'guard_name' => 'web']);
 
-        // Only create admin if none exists
-        if (!$adminExists) {
-            User::create([
-                'name' => 'Administrator',
-                'email' => 'admin@admin.com',
-                'password' => Hash::make('123456'),
-                'role' => 'admin',
+        
+        $admin = User::updateOrCreate(
+            ['email' => 'admin@admin.com'],
+            [
+                'name' => 'Admin',
+                'password' => bcrypt('123456'),
                 'email_verified_at' => now(),
-                'approved_at' => now(),
-            ]);
+            ]
+        );
 
-            $this->command->info('Admin user created successfully!');
-        } else {
-            $this->command->info('Admin user already exists. No new admin created.');
-        }
+        
+        $admin->assignRole('Admin');
+
+        $this->command->info('Admin user created/updated successfully!');
     }
 }
