@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Models;
+use Spatie\Permission\Traits\HasRoles;
+use Cog\Laravel\Ban\Traits\Bannable;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -12,6 +14,7 @@ class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
+    use HasRoles, Bannable;
 
     /**
      * The attributes that are mass assignable.
@@ -24,13 +27,12 @@ class User extends Authenticatable
         'password',
         'national_id',
         'avatar_image',
-        'role',
         'mobile',
-        'country',
+        'country_code',
         'gender',
-        'last_login_at',
         'approved_at',
         'approved_by',
+        'manager_id',
     ];
 
     /**
@@ -65,4 +67,42 @@ class User extends Authenticatable
     {
         return $this->belongsTo(User::class, 'approved_by');
     }
+
+    public function createdFloors()
+    {
+        return $this->hasMany(Floor::class, 'created_by');
+    }
+
+    public function createdRooms()
+    {
+        return $this->hasMany(Room::class, 'created_by');
+    }
+
+    public function reservations()
+    {
+        return $this->hasMany(Reservation::class, 'client_id');
+    }
+
+    public function bans()
+    {
+        return $this->hasMany(Ban::class);
+    }
+
+    public function manager()
+    {
+        return $this->belongsTo(User::class, 'manager_id');
+    }
+
+    public function managedReceptionists()
+    {
+        return $this->hasMany(User::class, 'manager_id')
+                ->whereHas('roles', fn($q) => $q->where('name', 'receptionist'));
+    }
+
+    public function approvedClients()
+    {
+        return $this->hasMany(User::class, 'approved_by')
+                    ->whereHas('roles', fn($q) => $q->where('name', 'client'));
+    }
+
 }
