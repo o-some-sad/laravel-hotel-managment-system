@@ -26,18 +26,17 @@ class UserFactory extends Factory
         return [
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
-            'email_verified_at' => now(),
-            'password' => static::$password ??= Hash::make('password'),
-            'remember_token' => Str::random(10),
+            'email_verified_at' => now(), 
+            'password' => bcrypt('password'),
             'national_id' => fake()->unique()->numerify('##########'),
             'avatar_image' => null,
-            'role' => fake()->randomElement(['admin', 'manager', 'receptionist', 'client']),
             'mobile' => fake()->phoneNumber(),
-            'country' => fake()->country(),
+            'country_code' => fake()->countryCode(),
             'gender' => fake()->randomElement(['male', 'female']),
-            'last_login_at' => fake()->dateTimeThisMonth(),
-            'approved_at' => fake()->dateTimeThisMonth(),
+            'approved_at' => now(),
             'approved_by' => null,
+            'manager_id' => null,
+            'remember_token' => Str::random(10),
         ];
     }
 
@@ -91,3 +90,4 @@ class UserFactory extends Factory
         ]);
     }
 }
+
