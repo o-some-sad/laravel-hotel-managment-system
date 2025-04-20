@@ -16,6 +16,9 @@ const form = useForm({
     email: '',
     password: '',
     password_confirmation: '',
+    country: '',
+    gender: '',
+    avatar_image: null,
 });
 
 const submit = () => {
@@ -26,23 +29,23 @@ const submit = () => {
 </script>
 
 <template>
-    <Head title="Register" />
-    
+
     <div class="min-h-screen flex flex-col bg-background">
+        <Head title="Register" />
         <Navbar :auth="auth" />
-        
+
         <main class="flex-grow flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
             <Card class="w-full max-w-md">
                 <CardHeader>
                     <CardTitle class="text-2xl font-bold text-center">Create an Account</CardTitle>
                     <CardDescription class="text-center">Sign up to get started with our hotel management system</CardDescription>
                 </CardHeader>
-                
+
                 <CardContent>
-                    <form @submit.prevent="submit" class="space-y-4">
+                    <form @submit.prevent="submit" class="space-y-4" >
                         <div class="space-y-2">
                             <Label for="name">Name</Label>
-                            <Input 
+                            <Input
                                 id="name"
                                 type="text"
                                 v-model="form.name"
@@ -55,10 +58,10 @@ const submit = () => {
                                 {{ form.errors.name }}
                             </p>
                         </div>
-                        
+
                         <div class="space-y-2">
                             <Label for="email">Email</Label>
-                            <Input 
+                            <Input
                                 id="email"
                                 type="email"
                                 v-model="form.email"
@@ -70,10 +73,10 @@ const submit = () => {
                                 {{ form.errors.email }}
                             </p>
                         </div>
-                        
+
                         <div class="space-y-2">
                             <Label for="password">Password</Label>
-                            <Input 
+                            <Input
                                 id="password"
                                 type="password"
                                 v-model="form.password"
@@ -85,10 +88,10 @@ const submit = () => {
                                 {{ form.errors.password }}
                             </p>
                         </div>
-                        
+
                         <div class="space-y-2">
                             <Label for="password_confirmation">Confirm Password</Label>
-                            <Input 
+                            <Input
                                 id="password_confirmation"
                                 type="password"
                                 v-model="form.password_confirmation"
@@ -100,13 +103,13 @@ const submit = () => {
                                 {{ form.errors.password_confirmation }}
                             </p>
                         </div>
-                        
+
                         <Button type="submit" class="w-full" :disabled="form.processing">
                             {{ form.processing ? 'Creating account...' : 'Create account' }}
                         </Button>
                     </form>
                 </CardContent>
-                
+
                 <CardFooter>
                     <p class="text-center text-sm text-muted-foreground">
                         Already have an account?
@@ -117,7 +120,7 @@ const submit = () => {
                 </CardFooter>
             </Card>
         </main>
-        
+
         <Footer />
     </div>
 </template>

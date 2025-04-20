@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Inertia\Inertia;
+use App\Http\Requests\ClientRegisterRequest;
 use Inertia\Response;
 
 class RegisteredUserController extends Controller
@@ -28,18 +29,21 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(ClientRegisterRequest $request): RedirectResponse
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
+
+        $avatarPath = null;
+        if ($request->hasFile('avatar_image')) {
+            $avatarPath = $request->file('avatar_image')->store('avatars', 'public');
+        }
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'password' => bcrypt($request['password']),
+            'country' => $request['country'],
+            'gender' => $request['gender'],
+            'avatar_image' => $avatarPath,
         ]);
 
         event(new Registered($user));
