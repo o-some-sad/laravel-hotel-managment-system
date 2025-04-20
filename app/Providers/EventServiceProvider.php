@@ -12,7 +12,7 @@ class EventServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // 
     }
 
     /**
@@ -21,7 +21,6 @@ class EventServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // Removed parent::boot() as it does not exist in the parent class.
-        
         Floor::observe(FloorObserver::class);
     }
 }

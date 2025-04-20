@@ -1,26 +1,18 @@
 <script setup>
-import { ref } from 'vue';
-import { Link } from '@inertiajs/vue3';
-import { Button } from "@/components/ui/button";
-import { useTheme } from "@/composables/useTheme";
-import Navbar from '@/components/Navbar.vue';
 import Footer from '@/components/Footer.vue';
+import Navbar from '@/components/Navbar.vue';
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
-  CardTitle,
+  CardTitle
 } from "@/components/ui/card";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-  DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu";
-import { Home, User, Settings, LogOut, Menu, X } from 'lucide-vue-next';
+import { useTheme } from "@/composables/useTheme";
+import { Link } from '@inertiajs/vue3';
+import { Home, LogOut, Menu, User, X } from 'lucide-vue-next';
+import { ref } from 'vue';
 
 const { theme, toggleTheme } = useTheme();
 const isSidebarOpen = ref(false);
