@@ -130,7 +130,7 @@ const submit = () => {
                             <Label for="avatar_image">Avatar <span
                             class="text-muted-foreground" >(optional)</span></Label>
 
-                            <Input id="avatar_image" type="file" @change="handleAvatarUpload" accept="image/jpeg" />
+                            <Input id="avatar_image" type="file" @change="handleAvatarUpload" accept="image/jpeg,image/jpg" />
                             <p v-if="form.errors.avatar_image" class="text-sm text-destructive mt-1">
                                 {{ form.errors.avatar_image }}
                             </p>
