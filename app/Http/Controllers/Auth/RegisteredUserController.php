@@ -11,7 +11,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Inertia\Inertia;
+use App\Http\Requests\ClientRegisterRequest;
 use Inertia\Response;
+use Lwwcas\LaravelCountries\Models\Country;
+
 
 class RegisteredUserController extends Controller
 {
@@ -20,7 +23,14 @@ class RegisteredUserController extends Controller
      */
     public function create(): Response
     {
-        return Inertia::render('Auth/Register');
+        $countries = Country::select('id', 'official_name')
+        ->where('is_visible', 1)
+        ->get();
+
+
+        return Inertia::render('Auth/Register', [
+            'countries' => $countries,
+        ]);
     }
 
     /**
@@ -28,24 +38,26 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(ClientRegisterRequest $request): RedirectResponse
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
+        $avatarPath = $request->hasFile('avatar_image')
+        ? $request->file('avatar_image')->store('avatars', 'public')
+        : 'avatars/default.jpg';
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'password' => bcrypt($request['password']),
+            'country_code' => $request['country'],
+            'gender' => $request['gender'],
+            'avatar_image' => $avatarPath,
         ]);
+        $user->assignRole('client');
 
         event(new Registered($user));
 
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        return redirect('/');
     }
 }

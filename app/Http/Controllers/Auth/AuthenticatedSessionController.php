@@ -38,7 +38,7 @@ class AuthenticatedSessionController extends Controller
         $user->last_login_at = now();
         $user->save();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        return redirect('/user/dashboard');
     }
 
     /**
