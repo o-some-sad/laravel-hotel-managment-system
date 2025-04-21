@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Floor;
 use App\Http\Requests\FloorManagerRequest;
+use Inertia\Inertia;
+
 
 class FloorManagerController extends Controller
 {
@@ -47,9 +49,12 @@ class FloorManagerController extends Controller
 
     public function index(){
         // show ALL floors
-        $allFloors = Floor::paginate(10);
-        //  ** VIEW-NAME **
-        return view('viewFloors', ['floors'=> $allFloors]);
+        // eager-loading - creator is the function (including the relationship)
+        // if is important, and name is the thing we wanna display in vue
+        $allFloors = Floor::with('creator:id,name')->get();
+        return Inertia::render('FloorManager/Index', [
+            'floors' => $allFloors
+        ]);
     }
 
     public function edit($id){

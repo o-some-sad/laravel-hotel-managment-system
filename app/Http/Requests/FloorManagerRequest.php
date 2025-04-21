@@ -23,7 +23,6 @@ class FloorManagerRequest extends FormRequest
     {
         return [
             'name' => ['required','min: 3'],
-            'number' => ['required'],
             'created_by' => ['required','exists:users,id']
         ];
     }
@@ -32,7 +31,6 @@ class FloorManagerRequest extends FormRequest
         return [
             'name.required' => 'The floor name field is required.',
             'name.min' => 'The floor name must be at least 3 characters.',
-            'number.required' => 'The floor number is required.',
             'created_by.required' => 'Please specify the manager who created this floor.',
             'created_by.exists' => 'The selected manager does not exist in our records.'       
         ];
