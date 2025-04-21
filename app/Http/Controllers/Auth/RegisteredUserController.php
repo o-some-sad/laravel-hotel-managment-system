@@ -30,7 +30,6 @@ class RegisteredUserController extends Controller
 
         return Inertia::render('Auth/Register', [
             'countries' => $countries,
-            'errors' => session('errors')
         ]);
     }
 

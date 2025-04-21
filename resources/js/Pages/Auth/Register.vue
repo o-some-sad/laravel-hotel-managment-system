@@ -1,5 +1,6 @@
 <script setup>
 import { Head, Link, useForm } from '@inertiajs/vue3';
+import { router } from '@inertiajs/vue3';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -21,15 +22,17 @@ const form = useForm({
     gender: '',
     avatar_image: null,
 });
+const handleAvatarUpload = (event) => {
+    form.avatar_image = event.target.files[0];
+};
 
 const submit = () => {
-    form.post(route('register'), {
-        onError: () => alert('There was an error while submitting the form. Please try again!'),
-        onFinish: () => form.reset('password', 'password_confirmation'),
-        // onFinish: () => {form.reset();},
+    form.post(route('register'),{
+        forceFormData: true,
         onSuccess: () => {
+            form.reset('password', 'password_confirmation'),
             // Redirect to login page after successful registration
-            Inertia.visit(route('login'));
+            router.visit(route('login'));
         },
     });
 
@@ -55,7 +58,7 @@ const submit = () => {
                     <form @submit.prevent="submit" class="space-y-4">
                         <div class="space-y-2">
                             <Label for="name">Name <span class="text-destructive">*</span></Label>
-                            <Input id="name" type="text" v-model="form.name" required autofocus autocomplete="name"
+                            <Input id="name" type="text" v-model="form.name"  autofocus autocomplete="name"
                                 :class="{ 'border-destructive': form.errors.name }" />
                             <p v-if="form.errors.name" class="text-sm text-destructive mt-1">
                                 {{ form.errors.name }}
@@ -64,7 +67,7 @@ const submit = () => {
 
                         <div class="space-y-2">
                             <Label for="email">Email <span class="text-destructive">*</span></Label>
-                            <Input id="email" type="email" v-model="form.email" required autocomplete="username"
+                            <Input id="email" type="email" v-model="form.email" autocomplete="username"
                                 :class="{ 'border-destructive': form.errors.email }" />
                             <p v-if="form.errors.email" class="text-sm text-destructive mt-1">
                                 {{ form.errors.email }}
@@ -73,7 +76,7 @@ const submit = () => {
 
                         <div class="space-y-2">
                             <Label for="password">Password <span class="text-destructive">*</span></Label>
-                            <Input id="password" type="password" v-model="form.password" required
+                            <Input id="password" type="password" v-model="form.password"
                                 autocomplete="new-password" :class="{ 'border-destructive': form.errors.password }" />
                             <p v-if="form.errors.password" class="text-sm text-destructive mt-1">
                                 {{ form.errors.password }}
@@ -84,7 +87,7 @@ const submit = () => {
                             <Label for="password_confirmation">Confirm Password <span
                                     class="text-destructive">*</span></Label>
                             <Input id="password_confirmation" type="password" v-model="form.password_confirmation"
-                                required autocomplete="new-password"
+                             autocomplete="new-password"
                                 :class="{ 'border-destructive': form.errors.password_confirmation }" />
                             <p v-if="form.errors.password_confirmation" class="text-sm text-destructive mt-1">
                                 {{ form.errors.password_confirmation }}
@@ -93,7 +96,7 @@ const submit = () => {
                         <!-- Country Dropdown -->
                         <div class="space-y-2">
                             <Label for="country">Country <span class="text-destructive">*</span></Label>
-                            <select id="country" v-model="form.country" required class="w-full rounded px-3 py-2 border focus:outline-none focus:ring-2 focus:ring-primary
+                            <select id="country" v-model="form.country" class="w-full rounded px-3 py-2 border focus:outline-none focus:ring-2 focus:ring-primary
            bg-white text-black dark:bg-gray-800 dark:text-white dark:border-gray-600"
                                 :class="{ 'border-destructive': form.errors.country }">
                                 <option value="" disabled>Select a country</option>
@@ -112,7 +115,7 @@ const submit = () => {
                             <select id="gender" v-model="form.gender"
                             class="w-full rounded px-3 py-2 border focus:outline-none focus:ring-2 focus:ring-primary
                             bg-white text-black dark:bg-gray-800 dark:text-white dark:border-gray-600"
-                            :class="{ 'border-destructive': form.errors.gender }" required>
+                            :class="{ 'border-destructive': form.errors.gender }">
                                 <option value="" disabled>Select gender</option>
                                 <option value="male">Male</option>
                                 <option value="female">Female</option>
