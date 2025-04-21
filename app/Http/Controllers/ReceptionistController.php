@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Reservation;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
+use App\Notifications\ClientApprovedNotification;
 
 
 class ReceptionistController extends Controller
@@ -20,7 +21,7 @@ class ReceptionistController extends Controller
                               ->whereHas('roles', fn($q) => $q->where('name', 'client'))
                               ->with('roles')
                               ->paginate(10);
-        
+
         return Inertia::render('Receptionist/PendingClients', [
             'pendingClients' => $pendingClients
         ]);
@@ -35,13 +36,13 @@ class ReceptionistController extends Controller
             $user->approved_at = now();
             $user->approved_by = Auth::id();
             $user->save();
-            
+
             // Send approval notification (this should be implemented in a job/queue as specified)
-            // $user->notify(new ClientApprovedNotification());
-            
+            $user->notify(new ClientApprovedNotification());
+
             return redirect()->back()->with('success', 'Client approved successfully.');
         }
-        
+
         return redirect()->back()->with('error', 'Unable to approve this client.');
     }
 
@@ -55,7 +56,7 @@ class ReceptionistController extends Controller
                                ->whereNotNull('approved_at')
                                ->whereHas('roles', fn($q) => $q->where('name', 'client'))
                                ->paginate(10);
-        
+
         return Inertia::render('Receptionist/ApprovedClients', [
             'approvedClients' => $approvedClients
         ]);
@@ -71,7 +72,7 @@ class ReceptionistController extends Controller
                         })
                         ->with(['client', 'room'])
                         ->paginate(10);
-        
+
         return Inertia::render('Receptionist/ClientsReservations', [
             'reservations' => $reservations
         ]);
