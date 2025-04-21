@@ -5,6 +5,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\ManagerController;
+use App\Http\Controllers\ReceptionistController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\ReservationController;
 
@@ -43,6 +44,25 @@ Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name(
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/managers', [ManagerController::class, 'index'])->name('managers.index');
 });
+
+
+//Route::middleware(['auth', 'receptionist'])->group(function () {
+    // Pending clients route
+    Route::get('/clients/pending', [ReceptionistController::class, 'pendingClients'])
+        ->name('receptionist.pending-clients');
+    
+    // Approve client route
+    Route::post('/clients/{user}/approve', [ReceptionistController::class, 'approveClient'])
+        ->name('receptionist.approve-client');
+    
+    // My approved clients route
+    Route::get('/clients/approved', [ReceptionistController::class, 'approvedClients'])
+        ->name('receptionist.approved-clients');
+    
+    // Clients reservations route
+    Route::get('/clients/reservations', [ReceptionistController::class, 'clientsReservations'])
+        ->name('receptionist.clients-reservations');
+//});
 
 Route::post('/managers/{user}/ban', [ManagerController::class, 'ban'])->name('managers.ban');
 
