@@ -9,9 +9,14 @@ import {
   Settings,
   LogOut,
   Hotel, 
-  Bell,
   User
 } from 'lucide-vue-next';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 // Import table components
 import {
@@ -123,15 +128,14 @@ const approveClient = (clientId) => {
 <br>
         <div class="flex items-center space-x-4">    
           <!-- Profile Icon -->
-          <button :class="[
+          <!-- <button :class="[
             'p-1 rounded-full focus:outline-none',
             theme === 'dark' ? 'text-gray-300 hover:text-white' : 'text-gray-400 hover:text-gray-500'
           ]">
             <User class="h-6 w-6" />
-          </button>
-          
-          <!-- Theme Toggle -->
-          <button :class="[
+          </button> -->
+        <!-- Theme Toggle -->
+        <button :class="[
             'p-1 rounded-full focus:outline-none',
             theme === 'dark' ? 'text-gray-300 hover:text-white' : 'text-gray-400 hover:text-gray-500'
           ]" @click="toggleTheme">
@@ -144,6 +148,42 @@ const approveClient = (clientId) => {
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
             </svg>
           </button>
+        <!-- User menu -->
+        <DropdownMenu>
+          <DropdownMenuTrigger as-child>
+            <Button variant="ghost" size="icon" class="rounded-full">
+              <!-- <img 
+                src="https://ui-avatars.com/api/?name=Admin+User&background=random" 
+                alt="User" 
+                class="h-8 w-8 rounded-full"
+              /> -->
+              <Settings class="['p-1 rounded-full focus:outline-none',theme === 'dark' ? 'text-gray-300 hover:text-white' : 'text-gray-400 hover:text-gray-500']" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <!-- <div class="flex items-center justify-start gap-2 p-2">
+              <div class="flex flex-col space-y-1 leading-none">
+                <p class="font-medium">{{ auth.user.name }}</p>
+                <p class="text-xs text-muted-foreground">{{ auth.user.email }}</p>
+              </div>
+            </div> -->
+            <Separator />
+            <DropdownMenuItem>
+              <Link  class="w-full flex items-center">
+                <User class="mr-2 h-4 w-4" />
+                <span>Profile</span>
+              </Link>
+            </DropdownMenuItem>
+            <Separator />
+            <DropdownMenuItem>
+              <Link :href="route('logout')" method="post" as="button" class="w-full flex items-center text-destructive">
+                <LogOut class="mr-2 h-4 w-4" />
+                <span>Log out</span>
+              </Link>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
         </div>
       </header>
 
