@@ -7,6 +7,8 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import Navbar from '@/components/Navbar.vue';
 import Footer from '@/components/Footer.vue';
+import Swal from 'sweetalert2';
+
 
 defineProps({
     auth: Object,
@@ -30,12 +32,18 @@ const submit = () => {
     form.post(route('register'),{
         forceFormData: true,
         onSuccess: () => {
-            form.reset('password', 'password_confirmation'),
-            // Redirect to login page after successful registration
-            router.visit(route('login'));
+            form.reset('password', 'password_confirmation');
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Registration Successful!',
+                text: 'Your account is pending approval. We will send you an email once approved!',
+                confirmButtonText: 'OK'
+            }).then(() => {
+                router.visit('/');
+            });
         },
     });
-
 };
 </script>
 

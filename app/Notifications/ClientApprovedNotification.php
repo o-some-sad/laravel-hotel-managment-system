@@ -35,10 +35,11 @@ class ClientApprovedNotification extends Notification implements ShouldQueue
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-        ->line('Your account has been approved!');
-            // ->line('The introduction to the notification.')
-            // ->action('Notification Action', url('/'))
-            // ->line('Thank you for using our application!');
+            ->subject('Your account has been approved!')
+            ->greeting('Hello ' . $notifiable->name . ' 🎉')
+            ->line('Your account has been approved successfully.')
+            ->action('Login Now', url('/login'))
+            ->line('Thank you for choosing our hotel!');
     }
 
     /**
