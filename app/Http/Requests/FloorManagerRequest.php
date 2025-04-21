@@ -23,16 +23,17 @@ class FloorManagerRequest extends FormRequest
     {
         return [
             'name' => ['required','min: 3'],
-            'created_by' => ['required','exists:users,id']
+            // 'created_by' => ['required']
+            // ,'exists:users,id'
         ];
     }
 
     public function messages(){
         return [
-            'name.required' => 'The floor name field is required.',
-            'name.min' => 'The floor name must be at least 3 characters.',
-            'created_by.required' => 'Please specify the manager who created this floor.',
-            'created_by.exists' => 'The selected manager does not exist in our records.'       
+            'name.required' => 'Please write a floor name.',
+            'name.min' => 'Name must be at least 3 characters.',
+            // 'created_by.required' => 'Please specify the manager who created this floor.',
+            // 'created_by.exists' => 'The selected manager does not exist in our records.'       
         ];
     }
 }

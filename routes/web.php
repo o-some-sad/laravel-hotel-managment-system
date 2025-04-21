@@ -9,7 +9,6 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\FloorManagerController;
 
 
-Route::get('/floors', [FloorManagerController::class,'index'])->name('floorManager.index');
 Route::get('/', function () {
     return Inertia::render('LandingPage', [
         'canLogin' => Route::has('login'),
@@ -41,5 +40,10 @@ Route::middleware(['auth', 'admin'])->group(function () {
 });
 
 Route::post('/managers/{user}/ban', [ManagerController::class, 'ban'])->name('managers.ban');
+Route::get('/floors', [FloorManagerController::class,'index'])->name('floorManager.index');
+Route::get('/addFloor', [FloorManagerController::class,'create'])->name('floorManager.create');
+Route::middleware('auth')->group(function () {
+    Route::post('/storeFloor', [FloorManagerController::class, 'store'])->name('floorManager.store');
+});
 
 require __DIR__.'/auth.php';

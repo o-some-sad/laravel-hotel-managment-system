@@ -1,10 +1,9 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center p-4 bg-gray-500">
+  <div class="min-h-screen flex items-center justify-center p-4 bg-gray-700">
     <div class="w-full max-w-4xl rounded-lg shadow-sm overflow-hidden">
       <div class="min-h-screen p-4 bg-gray-100">
-    <!-- Title Section -->
     <div class="flex items-center justify-center mb-6">
-      <h1 class="text-2xl font-bold mr-3">Floors List</h1>
+      <h1 class="text-2xl font-bold mr-3 dark: text-black">Floors List</h1>
       <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
         {{ floors.length }} Total
       </span>
@@ -41,14 +40,18 @@
           </td>
         </tr>
       </tbody>
-    </table>
+    </table><br>
+    <div>
+    <button @click="addFloor" class="bg-blue-400 float-end rounded-md w-[150px] transition duration-300 ease-in-out hover:-translate-y-1 hover:scale-110 hover:bg-blue-600 hover:text-white ...">
+  Add new floor
+</button>
+</div>
   </div>
   </div>
 </div>
-
 </template>
-
 <script setup>
+import { router } from '@inertiajs/vue3'
 defineProps({
   floors: {
     type: Array,
@@ -56,4 +59,7 @@ defineProps({
     default: () => []
   }
 })
+function addFloor(){
+  router.get('/addFloor');
+}
 </script>

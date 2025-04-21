@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Floor;
 use App\Http\Requests\FloorManagerRequest;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Auth;
 
 
 class FloorManagerController extends Controller
@@ -13,30 +14,28 @@ class FloorManagerController extends Controller
     //
     public function create()
     {
-        // create a floor
-        $getFloors = Floor::all();
-        //  ** VIEW-NAME **
-        return view('floors.create',['floors'=>$getFloors]);
-
+        $addFloor = Floor::all();
+        return Inertia::render('FloorManager/Create', [
+            'floors' => $addFloor
+        ]);
     }
 
     public function store(FloorManagerRequest $request)
     {
-        // store the floor
+        // dd($request->all());
         $validatedCol = $request->validated();
         try{
             $floor = Floor::create([
                 'name'=> $validatedCol['name'],
-                'number'=> $validatedCol['number'],
-                'created_by'=> $validatedCol['created_by']
+                'created_by' => Auth::id()
+                // 'created_by'=> $validatedCol['created_by']
             ]);
-            //  ** VIEW-NAME **
-            return redirect()->route('floors.show', $floor->id)
-            ->with('success', 'Floor created successfully!');
-            //  OR         return to_route('index');
-        } catch (\Exception $e) {
+            return redirect()
+            ->route('floorManager.index')
+            ->with('success', 'Floor added successfully!');
+            } catch (\Exception $e) {
             return back()
-                ->withInput()  // Preserve form input
+                ->withInput()
                 ->with('error', 'Floor creation failed. Please try again.');
         }
     }
@@ -64,7 +63,7 @@ class FloorManagerController extends Controller
 
     }
     public function update(Request $request, $id){
-        //
+        // CREATE AN UpdateFloorRequest
     }
     
 }
