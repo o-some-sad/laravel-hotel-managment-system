@@ -19,7 +19,7 @@ class ReceptionistController extends Controller
         $pendingClients = User::whereNull('approved_at')
                               ->whereHas('roles', fn($q) => $q->where('name', 'client'))
                               ->with('roles')
-                              ->paginate(10);
+                              ->paginate(5);
         
         return Inertia::render('Receptionist/PendingClients', [
             'pendingClients' => $pendingClients
@@ -54,7 +54,7 @@ class ReceptionistController extends Controller
         $approvedClients = User::where('approved_by', Auth::id())
                                ->whereNotNull('approved_at')
                                ->whereHas('roles', fn($q) => $q->where('name', 'client'))
-                               ->paginate(10);
+                               ->paginate(5);
         
         return Inertia::render('Receptionist/ApprovedClients', [
             'approvedClients' => $approvedClients
@@ -70,7 +70,7 @@ class ReceptionistController extends Controller
                             $query->where('approved_by', Auth::id());
                         })
                         ->with(['client', 'room'])
-                        ->paginate(10);
+                        ->paginate(5);
         
         return Inertia::render('Receptionist/ClientsReservations', [
             'reservations' => $reservations

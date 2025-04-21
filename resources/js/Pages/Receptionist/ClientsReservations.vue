@@ -199,7 +199,53 @@ const props = defineProps({
                 </TableRow>
               </TableBody>
             </Table>
+
+            <!-- Pagination Controls -->
+            <div class="flex items-center justify-between space-x-6 mt-4">
+            <div :class="[
+                'text-sm',
+                theme === 'dark' ? 'text-gray-400' : 'text-gray-500'
+            ]">
+                <!-- Simple record count display -->
+                Total: {{ reservations.total || reservations.data.length }} records
+            </div>
+            
+            <div class="flex items-center space-x-1">
+                <!-- Simpler pagination controls that will work with minimal data -->
+                <Button 
+                variant="outline" 
+                size="sm" 
+                :disabled="(reservations.current_page || 1) <= 1" 
+                @click="goToPage((reservations.current_page || 1) - 1)"
+                :class="[
+                    theme === 'dark' ? 'bg-gray-700 text-gray-300 border-gray-600' : '',
+                    'px-2'
+                ]"
+                >
+                <ChevronLeft class="h-4 w-4" /> Previous
+                </Button>
+                
+                <!-- Show current page / total pages -->
+                <span :class="theme === 'dark' ? 'text-gray-300' : ''" class="px-2">
+                Page {{ reservations.current_page || 1 }} of {{ reservations.last_page || 1 }}
+                </span>
+                
+                <Button 
+                variant="outline" 
+                size="sm" 
+                :disabled="!(reservations.next_page_url) || (reservations.current_page || 1) >= (reservations.last_page || 1)" 
+                @click="goToPage((reservations.current_page || 1) + 1)"
+                :class="[
+                    theme === 'dark' ? 'bg-gray-700 text-gray-300 border-gray-600' : '',
+                    'px-2'
+                ]"
+                >
+                Next <ChevronRight class="h-4 w-4" />
+                </Button>
+            </div>
+            </div>
           </div>
+
         </div>
 
         <!-- Quick Actions Section -->

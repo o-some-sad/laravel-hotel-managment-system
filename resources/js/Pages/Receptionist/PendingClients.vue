@@ -9,7 +9,9 @@ import {
   Settings,
   LogOut,
   Hotel, 
-  User
+  User,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-vue-next';
 import {
   DropdownMenu,
@@ -29,6 +31,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import DashboardHeader from '@/components/dashboard/DashboardHeader.vue';
 import DashboardSidebar from '@/components/dashboard/DashboardSidebar.vue';
 import StatsCards from '@/components/dashboard/StatsCards.vue';
@@ -49,6 +52,12 @@ const approveClient = (clientId) => {
             // Success notification can be added here
         },
     });
+};
+
+// Function to navigate to a specific page
+const goToPage = (page) => {
+    // Using Inertia to navigate to the same route with a different page parameter
+    window.location.href = route('receptionist.pending-clients', { page: page });
 };
 </script>
 
@@ -127,63 +136,44 @@ const approveClient = (clientId) => {
       ]">
 <br>
         <div class="flex items-center space-x-4">    
-          <!-- Profile Icon -->
-          <!-- <button :class="[
-            'p-1 rounded-full focus:outline-none',
-            theme === 'dark' ? 'text-gray-300 hover:text-white' : 'text-gray-400 hover:text-gray-500'
-          ]">
-            <User class="h-6 w-6" />
-          </button> -->
-        <!-- Theme Toggle -->
-        <button :class="[
-            'p-1 rounded-full focus:outline-none',
-            theme === 'dark' ? 'text-gray-300 hover:text-white' : 'text-gray-400 hover:text-gray-500'
-          ]" @click="toggleTheme">
-            <span v-if="theme === 'dark'" class="sr-only">Switch to light mode</span>
-            <span v-else class="sr-only">Switch to dark mode</span>
-            <svg v-if="theme === 'dark'" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-            </svg>
-            <svg v-else class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-            </svg>
-          </button>
-        <!-- User menu -->
-        <DropdownMenu>
-          <DropdownMenuTrigger as-child>
-            <Button variant="ghost" size="icon" class="rounded-full">
-              <!-- <img 
-                src="https://ui-avatars.com/api/?name=Admin+User&background=random" 
-                alt="User" 
-                class="h-8 w-8 rounded-full"
-              /> -->
-              <Settings class="['p-1 rounded-full focus:outline-none',theme === 'dark' ? 'text-gray-300 hover:text-white' : 'text-gray-400 hover:text-gray-500']" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <!-- <div class="flex items-center justify-start gap-2 p-2">
-              <div class="flex flex-col space-y-1 leading-none">
-                <p class="font-medium">{{ auth.user.name }}</p>
-                <p class="text-xs text-muted-foreground">{{ auth.user.email }}</p>
-              </div>
-            </div> -->
-            <Separator />
-            <DropdownMenuItem>
-              <Link  class="w-full flex items-center">
-                <User class="mr-2 h-4 w-4" />
-                <span>Profile</span>
-              </Link>
-            </DropdownMenuItem>
-            <Separator />
-            <DropdownMenuItem>
-              <Link :href="route('logout')" method="post" as="button" class="w-full flex items-center text-destructive">
-                <LogOut class="mr-2 h-4 w-4" />
-                <span>Log out</span>
-              </Link>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-
+          <!-- Theme Toggle -->
+          <button :class="[
+              'p-1 rounded-full focus:outline-none',
+              theme === 'dark' ? 'text-gray-300 hover:text-white' : 'text-gray-400 hover:text-gray-500'
+            ]" @click="toggleTheme">
+              <span v-if="theme === 'dark'" class="sr-only">Switch to light mode</span>
+              <span v-else class="sr-only">Switch to dark mode</span>
+              <svg v-if="theme === 'dark'" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+              </svg>
+              <svg v-else class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+              </svg>
+            </button>
+          <!-- User menu -->
+          <DropdownMenu>
+            <DropdownMenuTrigger as-child>
+              <Button variant="ghost" size="icon" class="rounded-full">
+                <Settings class="['p-1 rounded-full focus:outline-none',theme === 'dark' ? 'text-gray-300 hover:text-white' : 'text-gray-400 hover:text-gray-500']" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <Separator />
+              <DropdownMenuItem>
+                <Link class="w-full flex items-center">
+                  <User class="mr-2 h-4 w-4" />
+                  <span>Profile</span>
+                </Link>
+              </DropdownMenuItem>
+              <Separator />
+              <DropdownMenuItem>
+                <Link :href="route('logout')" method="post" as="button" class="w-full flex items-center text-destructive">
+                  <LogOut class="mr-2 h-4 w-4" />
+                  <span>Log out</span>
+                </Link>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </header>
 
@@ -243,6 +233,51 @@ const approveClient = (clientId) => {
                 </TableRow>
               </TableBody>
             </Table>
+            
+            <!-- Pagination Controls -->
+            <div class="flex items-center justify-between space-x-6 mt-4">
+            <div :class="[
+                'text-sm',
+                theme === 'dark' ? 'text-gray-400' : 'text-gray-500'
+            ]">
+                <!-- Simple record count display -->
+                Total: {{ pendingClients.total || pendingClients.data.length }} records
+            </div>
+            
+            <div class="flex items-center space-x-1">
+                <!-- Simpler pagination controls that will work with minimal data -->
+                <Button 
+                variant="outline" 
+                size="sm" 
+                :disabled="(pendingClients.current_page || 1) <= 1" 
+                @click="goToPage((pendingClients.current_page || 1) - 1)"
+                :class="[
+                    theme === 'dark' ? 'bg-gray-700 text-gray-300 border-gray-600' : '',
+                    'px-2'
+                ]"
+                >
+                <ChevronLeft class="h-4 w-4" /> Previous
+                </Button>
+                
+                <!-- Show current page / total pages -->
+                <span :class="theme === 'dark' ? 'text-gray-300' : ''" class="px-2">
+                Page {{ pendingClients.current_page || 1 }} of {{ pendingClients.last_page || 1 }}
+                </span>
+                
+                <Button 
+                variant="outline" 
+                size="sm" 
+                :disabled="!(pendingClients.next_page_url) || (pendingClients.current_page || 1) >= (pendingClients.last_page || 1)" 
+                @click="goToPage((pendingClients.current_page || 1) + 1)"
+                :class="[
+                    theme === 'dark' ? 'bg-gray-700 text-gray-300 border-gray-600' : '',
+                    'px-2'
+                ]"
+                >
+                Next <ChevronRight class="h-4 w-4" />
+                </Button>
+            </div>
+            </div>
           </div>
         </div>
 
