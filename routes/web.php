@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\ManagerController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\ReservationController;
 
 Route::get('/', function () {
     return Inertia::render('LandingPage', [
@@ -45,4 +46,12 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
 Route::post('/managers/{user}/ban', [ManagerController::class, 'ban'])->name('managers.ban');
 
+Route::middleware('auth')->group(function () {
+    Route::get('/reservations', [ReservationController::class, 'index'])->name('reservations.index');
+    Route::get('/reservations/rooms', [ReservationController::class, 'availableRooms'])->name('reservations.available_rooms');
+    Route::get('/reservations/rooms/{roomId}', [ReservationController::class, 'showRoomForm'])->name('reservations.room_form');
+    Route::post('/reservations/rooms/{roomId}', [ReservationController::class, 'makeReservation'])->name('reservations.make');
+    Route::get('/reservations/payment/{reservationId}', [ReservationController::class, 'paymentPage'])->name('reservation.payment');
+    Route::post('/reservations/payment/{reservationId}', [ReservationController::class, 'processPayment'])->name('reservation.process_payment');
+});
 require __DIR__.'/auth.php';

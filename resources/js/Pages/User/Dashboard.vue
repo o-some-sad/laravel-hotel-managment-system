@@ -2,10 +2,10 @@
 import { ref } from 'vue';
 import { Head } from '@inertiajs/vue3';
 import { useTheme } from "@/composables/useTheme";
-import { 
-  Calendar, 
+import {
+  Calendar,
   CreditCard,
-  Hotel, 
+  Hotel,
   User,
   MessageSquare,
   Clock
@@ -52,13 +52,12 @@ const closeMobileSidebar = () => {
 </script>
 
 <template>
-  <Head title="User Dashboard" />
-
-  <div class="min-h-screen flex flex-col bg-background">
+    <div class="min-h-screen flex flex-col bg-background">
+    <Head title="User Dashboard" />
     <!-- User Dashboard Header -->
-    <UserDashboardHeader 
-      :theme="theme" 
-      :isMobileSidebarOpen="isMobileSidebarOpen" 
+    <UserDashboardHeader
+      :theme="theme"
+      :isMobileSidebarOpen="isMobileSidebarOpen"
       :notifications="notifications"
       :auth="$page.props.auth"
       @toggle-theme="toggleTheme"
@@ -67,7 +66,7 @@ const closeMobileSidebar = () => {
 
     <div class="flex flex-1 overflow-hidden">
       <!-- Sidebar -->
-      <UserDashboardSidebar 
+      <UserDashboardSidebar
         v-model:activeTab="activeTab"
         :isMobileSidebarOpen="isMobileSidebarOpen"
         @close-mobile-sidebar="closeMobileSidebar"
