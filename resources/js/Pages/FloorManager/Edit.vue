@@ -7,12 +7,10 @@
                         <div class="mt-12">
                         </div>
                     </div>
-                    <form @submit.prevent="submitForm(form.id)" class="ml-auo space-y-4" method="POST">
+                    <form @submit.prevent="submitForm" class="ml-auo space-y-4" method="POST">
                         <input type='text' placeholder='Name' name='name' v-model="form.name"
                             class="w-full rounded-md px-4 border text-sm outline-[#007bff]" />
                         <p class="text-red-700 font-bold" v-if="$page.props.errors.name">{{ $page.props.errors.name }}</p>
-                        <!-- <input type='text' placeholder='Subject'
-                            class="w-full rounded-md py-2.5 px-4 border text-sm outline-[#007bff]" /> -->
                             <div class="flex items-center justify-center">
                             <button
                             class="text-center w-full bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg shadow-md transition duration-200">
@@ -25,6 +23,9 @@
     <script setup>
     import { reactive } from 'vue'
     import { router } from '@inertiajs/vue3'
+    import { useToast } from 'vue-toastification'
+
+    const toast = useToast()
     const props = defineProps({
     floor: {
         type: Object,
@@ -35,7 +36,21 @@
         id: props.floor.id,
         name: props.floor.name
     })
-    function submitForm($id) {
-      router.put(`/updateFloor/${id}`, form)
+    function submitForm() {
+        router.put(`/updateFloor/${form.id}`, form, {
+    onSuccess: () => {
+      form.name = ''
+      toast.success('Floor edited successfully!', {
+        timeout: 2000,
+        position: 'bottom-center',
+      })
+    },
+    onError: (errors) => {
+      toast.error('There was an error editing the floor', {
+        timeout: 2000,
+        position: 'bottom-center'
+      })
+    }
+  })
     }
     </script>

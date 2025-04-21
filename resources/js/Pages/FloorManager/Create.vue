@@ -11,8 +11,6 @@
                     <input type='text' placeholder='Name' v-model="form.name"
                         class="w-full rounded-md px-4 border text-sm outline-[#007bff]" />
                     <p class="text-red-700 font-bold" v-if="$page.props.errors.name">{{ $page.props.errors.name }}</p>
-                    <!-- <input type='text' placeholder='Subject'
-                        class="w-full rounded-md py-2.5 px-4 border text-sm outline-[#007bff]" /> -->
                         <div class="flex items-center justify-center">
                         <button
                         class="text-center w-full bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg shadow-md transition duration-200">
