@@ -54,6 +54,8 @@ Route::middleware('auth')->group(function(){
 Route::middleware('auth')->group(function () {
     Route::put('/updateFloor/{id}', [FloorManagerController::class, 'update'])->name('floor.update');
 });
-
+Route::middleware('auth')->group(function () {
+    Route::delete('/delFloor/{id}', [FloorManagerController::class, 'delete'])->name('floor.delete');
+});
 
 require __DIR__.'/auth.php';
