@@ -25,26 +25,25 @@ class FloorManagerController extends Controller
         // dd($request->all());
         $validatedCol = $request->validated();
         try{
-            $floor = Floor::create([
+            Floor::create([
                 'name'=> $validatedCol['name'],
                 'created_by' => Auth::id()
                 // 'created_by'=> $validatedCol['created_by']
             ]);
             return redirect()
-            ->route('floorManager.index')
-            ->with('success', 'Floor added successfully!');
-            } catch (\Exception $e) {
+            ->route('floor.index');
+        } catch (\Exception $e) {
             return back()
                 ->withInput()
                 ->with('error', 'Floor creation failed. Please try again.');
         }
     }
-    public function show($id){
-        // show a SINGLE floor
-        $getFloor = Floor::findOrFail($id);
-        //  ** VIEW-NAME **
-        return view('floors.create',['floors'=>$getFloor]);
-    }
+    // public function show($id){
+    //     // show a SINGLE floor
+    //     $getFloor = Floor::findOrFail($id);
+    //     //  ** VIEW-NAME **
+    //     return view('floors.create',['floors'=>$getFloor]);
+    // }
 
     public function index(){
         // show ALL floors
@@ -58,12 +57,23 @@ class FloorManagerController extends Controller
 
     public function edit($id){
         // edit a floor
-        $floors = Floor::findOrFail($id);
-        // edit
-
+        $floorID = Floor::findOrFail($id);
+        return Inertia::render('FloorManager/Edit', [
+            'floor' => $floorID
+        ]);
     }
-    public function update(Request $request, $id){
-        // CREATE AN UpdateFloorRequest
+    public function update($id, FloorManagerRequest $request){
+        $validatedCol = $request->validated();
+        try{
+        $editFloorById=Floor::find($id);
+        $editFloorById->name = $validatedCol['name'];
+        $editFloorById->save();
+        return redirect()
+            ->route('floor.index');
+        } catch (\Exception $e) {
+            return back()
+                ->withInput()
+                ->with('error', 'Floor editing failed. Please try again.');
+        }
     }
-    
 }

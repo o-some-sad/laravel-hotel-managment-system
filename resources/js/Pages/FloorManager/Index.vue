@@ -24,6 +24,7 @@
       
       <tbody class="bg-white divide-y divide-gray-200 text-center">
         <tr v-for="floor in floors" :key="floor.id" class="hover:bg-blue-200">
+          <td class="px-3 py-2 whitespace-nowrap text-gray-900" hidden>{{ floor.id }}</td>
           <td class="px-3 py-2 whitespace-nowrap text-gray-900">{{ floor.name }}</td>
           <td class="px-3 py-2 whitespace-nowrap text-gray-900">{{ floor.number }}</td>
           <!-- *********************************************************** -->
@@ -35,7 +36,7 @@
           <!-- *********************************************************** -->
           <!-- If the MANAGER is the one who created this floor -->
           <td class="px-3 py-2 whitespace-nowrap text-gray-900 text-center">
-            <button class="text-blue-600 hover:text-blue-800 mr-2">Edit</button>
+            <button @click="editFloor(floor.id)" class="text-blue-600 hover:text-blue-800 mr-2">Edit</button>
             <button class="text-red-600 hover:text-red-800">Delete</button>
           </td>
         </tr>
@@ -61,5 +62,8 @@ defineProps({
 })
 function addFloor(){
   router.get('/addFloor');
+}
+function editFloor(id){
+  router.get(`/editFloor/${id}`);
 }
 </script>

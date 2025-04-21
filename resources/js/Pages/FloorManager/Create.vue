@@ -25,12 +25,28 @@
 <script setup>
 import { reactive } from 'vue'
 import { router } from '@inertiajs/vue3'
+import { useToast } from 'vue-toastification'
 
+const toast = useToast()
 const form = reactive({
   name: ''
 })
 
 function submitForm() {
-  router.post('/storeFloor', form)
+  router.post('/storeFloor', form, {
+    onSuccess: () => {
+      form.name = ''
+      toast.success('Floor added successfully!', {
+        timeout: 2000,
+        position: 'bottom-center',
+      })
+    },
+    onError: (errors) => {
+      toast.error('There was an error adding the floor', {
+        timeout: 2000,
+        position: 'bottom-center'
+      })
+    }
+  })
 }
 </script>
