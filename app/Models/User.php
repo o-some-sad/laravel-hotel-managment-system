@@ -25,6 +25,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'created_by',
         'national_id',
         'avatar_image',
         'mobile',
@@ -105,4 +106,16 @@ class User extends Authenticatable
                     ->whereHas('roles', fn($q) => $q->where('name', 'client'));
     }
 
+    public function createdReceptionists()
+    {
+        return $this->hasMany(User::class, 'created_by')
+                ->whereHas('roles', fn($q) => $q->where('name', 'receptionist'));
+    }
+
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
 }
+

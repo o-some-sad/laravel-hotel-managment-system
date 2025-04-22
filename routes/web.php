@@ -8,7 +8,9 @@ use App\Http\Controllers\ManagerController;
 use App\Http\Controllers\ReceptionistController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\FloorManagerController;
-
+use App\Http\Controllers\ManagerReceptionistController;
+use App\Models\User;
+use Spatie\Permission\Middleware\RoleMiddleware;
 
 Route::get('/', function () {
     return Inertia::render('LandingPage', [
@@ -43,7 +45,7 @@ Route::middleware('guest')->group(function () {
 Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
 Route::middleware(['auth', 'admin'])->group(function () {
-    Route::get('/managers', [ManagerController::class, 'index'])->name('managers.index');
+    Route::get('/managers', [ManagerReceptionistController::class, 'index'])->name('managers.index');
 });
 
 
@@ -65,7 +67,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
         ->name('receptionist.clients-reservations');
 //});
 
-Route::post('/managers/{user}/ban', [ManagerController::class, 'ban'])->name('managers.ban');
+Route::post('/managers/{user}/ban', [ManagerReceptionistController::class, 'ban'])->name('managers.ban');
+
 Route::middleware('auth')->group(function() { 
     Route::get('/floors', [FloorManagerController::class,'index'])->name('floor.index');});
 Route::middleware('auth')->group(function(){
@@ -83,5 +86,19 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::delete('/delFloor/{id}', [FloorManagerController::class, 'delete'])->name('floor.delete');
 });
+
+
+
+Route::prefix('manager')->group(function () {
+    Route::middleware([RoleMiddleware::class . ':manager'])->group(function () {
+        Route::resource('receptionists', ManagerReceptionistController::class)->except(['show']);;
+    });
+});
+
+Route::get('/receptionists/{user}', function (User $user) {
+    return Inertia::render('Receptionist/Show', [
+        'receptionist' => $user
+    ]);
+})->middleware(['auth', \App\Http\Middleware\CheckReceptionistOwnership::class]);
 
 require __DIR__.'/auth.php';
