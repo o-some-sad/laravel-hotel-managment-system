@@ -74,23 +74,13 @@ Route::get('/clients/reservations', [ReceptionistController::class, 'clientsRese
 
 Route::middleware('auth')->group(function() {
 
-Route::post('/managers/{user}/ban', [ManagerController::class, 'ban'])->name('managers.ban');
-Route::middleware('auth')->group(function() {
+    Route::post('/managers/{user}/ban', [ManagerController::class, 'ban'])->name('managers.ban');
 
-    Route::get('/floors', [FloorManagerController::class,'index'])->name('floor.index');});
-Route::middleware('auth')->group(function(){
+    Route::get('/floors', [FloorManagerController::class,'index'])->name('floor.index');
     Route::get('/addFloor', [FloorManagerController::class,'create'])->name('floor.create');
-});
-Route::middleware('auth')->group(function () {
     Route::post('/storeFloor', [FloorManagerController::class, 'store'])->name('floor.store');
-});
-Route::middleware('auth')->group(function () {
     Route::get('/editFloor/{id}', [FloorManagerController::class, 'edit'])->name('floor.edit');
-});
-Route::middleware('auth')->group(function () {
     Route::put('/updateFloor/{id}', [FloorManagerController::class, 'update'])->name('floor.update');
-});
-Route::middleware('auth')->group(function () {
     Route::delete('/delFloor/{id}', [FloorManagerController::class, 'delete'])->name('floor.delete');
 });
 
@@ -162,4 +152,4 @@ Route::middleware(['auth'])->group(function () {
 });
 
 require __DIR__.'/auth.php';
-});
+
