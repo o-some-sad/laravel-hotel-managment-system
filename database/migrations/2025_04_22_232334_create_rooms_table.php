@@ -15,7 +15,7 @@ return new class extends Migration
             $table->unsignedInteger('capacity');
             $table->unsignedBigInteger('price');
             $table->string('image_url')->nullable(); // Add this line for storing Cloudinary URL
-            $table->boolean('is_reserved')->default(false); // 👈 new: is room reserved?
+            $table->boolean('is_reserved')->default(false); 
             $table->foreignId('reserved_by')->nullable()->constrained('users');
             $table->foreignId('created_by')->constrained('users');
             $table->timestamps();
