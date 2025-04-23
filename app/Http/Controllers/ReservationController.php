@@ -14,11 +14,23 @@ class ReservationController extends Controller
     public function index()
     {
         $reservations = Reservation::where('client_id', Auth::id())
-            ->with('room')
+            ->with('room:id,number')
+            ->select('id', 'room_id', 'accompany_number', 'paid_price', 'payment_status')
             ->paginate(10);
 
-            return Inertia::render('Client/Reservations', [
-                'data' => $reservations->items(),
+        return Inertia::render('Client/Reservations', [
+            'bookings' => [
+                'data' => $reservations->map(function ($reservation) {
+                    return [
+                        'id' => $reservation->id,
+                        'accompany_number' => $reservation->accompany_number,
+                        'paid_price' => $reservation->paid_price,
+                        'payment_status' => $reservation->payment_status,
+                        'room' => [
+                            'number' => $reservation->room->number,
+                        ],
+                    ];
+                }),
                 'meta' => [
                     'current_page' => $reservations->currentPage(),
                     'last_page' => $reservations->lastPage(),
@@ -29,8 +41,10 @@ class ReservationController extends Controller
                     'next' => $reservations->nextPageUrl(),
                     'prev' => $reservations->previousPageUrl(),
                 ],
-            ]);
+            ],
+        ]);
     }
+
 
     // Show the reservation form for the selected room.
     public function create(Room $room)

@@ -11,6 +11,7 @@ class Reservation extends Model
         'room_id',
         'accompany_number',
         'paid_price',
+        'payment_status',
         'approved_by',
         'start_date',
         'end_date',
@@ -30,7 +31,7 @@ class Reservation extends Model
     {
         return $this->belongsTo(User::class, 'approved_by');
     }
-    
+
     /**
      * Get the paid price in dollars.
      */
