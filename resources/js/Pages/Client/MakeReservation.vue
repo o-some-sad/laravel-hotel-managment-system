@@ -32,39 +32,37 @@ const submit = () => {
 </script>
 
 <template>
-    <div class="p-8" :class="theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-gray-100 text-black'">
+  <div class="p-8" :class="theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-gray-100 text-black'">
+    <Head title="Make Reservation" />
+    <div class="max-w-md mx-auto bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md transition-shadow hover:shadow-lg">
+      <h2 class="text-2xl font-bold mb-6 text-center">Reserve Room #{{ room.number }}</h2>
 
-        <Head title="Make Reservation" />
-        <div class="max-w-md mx-auto bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
-            <h2 class="text-2xl font-bold mb-6 text-center">Reserve Room #{{ room.number }}</h2>
-
-            <form @submit.prevent="submit" class="space-y-4">
-                <div>
-                    <label class="block mb-2 font-semibold">Room Capacity</label>
-                    <p>{{ room.capacity }} persons</p>
-                </div>
-
-                <div>
-                    <label for="accompany_number" class="block mb-2 font-semibold">Number of Accompany</label>
-                    <input type="number" id="accompany_number" v-model="form.accompany_number" min="1"
-                        :max="room.capacity" required
-                        class="w-full rounded border p-2 focus:outline-none dark:bg-gray-700 dark:border-gray-600" />
-                    <span v-if="form.errors.accompany_number" class="text-sm text-red-500">{{
-                        form.errors.accompany_number }}</span>
-                </div>
-
-                <button type="submit"
-                    class="w-full bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded disabled:opacity-50"
-                    :disabled="form.processing">
-                    {{ form.processing ? 'Processing...' : 'Proceed to Pay' }}
-                </button>
-            </form>
-
-            <div class="mt-6 text-center">
-                <Link :href="route('reservations.index')" class="text-primary underline">
-                Back to Available Rooms
-                </Link>
-            </div>
+      <form @submit.prevent="submit" class="space-y-6">
+        <div>
+          <label class="block mb-2 font-semibold">Room Capacity</label>
+          <p class="text-sm text-muted-foreground">{{ room.capacity }} persons</p>
         </div>
+
+        <div>
+          <label for="accompany_number" class="block mb-2 font-semibold">Number of Accompany</label>
+          <input type="number" id="accompany_number" v-model="form.accompany_number" min="1"
+            :max="room.capacity" required
+            class="w-full rounded-lg border p-3 focus:outline-none dark:bg-gray-700 dark:border-gray-600" />
+          <span v-if="form.errors.accompany_number" class="text-sm text-red-500">{{ form.errors.accompany_number }}</span>
+        </div>
+
+        <button type="submit"
+          class="w-full bg-primary hover:bg-primary/90 text-white font-bold py-3 rounded-lg transition"
+          :disabled="form.processing">
+          {{ form.processing ? 'Processing...' : 'Proceed to Pay' }}
+        </button>
+      </form>
+
+      <div class="mt-6 text-center">
+        <Link :href="route('reservations.index')" class="text-primary underline">
+          Back to Available Rooms
+        </Link>
+      </div>
     </div>
+  </div>
 </template>

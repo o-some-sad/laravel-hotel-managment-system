@@ -1,22 +1,34 @@
 <template>
     <div class="p-8">
-      <h1 class="text-2xl font-bold mb-4">Available Rooms</h1>
+      <h1 class="text-2xl font-bold mb-6">Available Rooms</h1>
 
-      <!-- Check if rooms data is available -->
       <div v-if="rooms && rooms.data.length > 0">
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          <!-- Loop through available rooms -->
-          <div v-for="room in rooms.data" :key="room.id" class="border p-4 rounded-lg">
-            <h2 class="text-lg font-semibold">{{ room.name }}</h2>
-            <p>Price: ${{ (room.price / 100).toFixed(2) }}</p>
-            <p>Capacity: {{ room.capacity }}</p>
-            <p v-if="room.is_reserved" class="text-red-500">This room is already reserved.</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+          <!-- Room Card -->
+          <div
+            v-for="room in rooms.data"
+            :key="room.id"
+            class="rounded-2xl border bg-card p-6 shadow-sm transition-shadow hover:shadow-lg"
+          >
+            <div class="flex items-center justify-between mb-4">
+              <h2 class="text-lg font-semibold">{{ room.name }}</h2>
+              <span
+                v-if="room.is_reserved"
+                class="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-700"
+              >
+                Reserved
+              </span>
+            </div>
 
-            <!-- Make Reservation button (visible if room is not reserved) -->
-            <div v-else>
+            <div class="text-sm text-muted-foreground space-y-1">
+              <p>Price: <span class="font-medium text-foreground">${{ (room.price / 100).toFixed(2) }}</span></p>
+              <p>Capacity: <span class="font-medium text-foreground">{{ room.capacity }} persons</span></p>
+            </div>
+
+            <div v-if="!room.is_reserved" class="mt-6">
               <button
                 @click="goToReservation(room.id)"
-                class="inline-block px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-700 mt-4"
+                class="w-full bg-primary text-white py-2 rounded-md hover:bg-primary/90 transition"
               >
                 Make Reservation
               </button>
@@ -25,27 +37,26 @@
         </div>
 
         <!-- Pagination Controls -->
-        <div class="mt-4 flex justify-between">
+        <div class="mt-8 flex justify-center gap-4">
           <button
             v-if="rooms.links.prev"
             @click="changePage(rooms.links.prev)"
-            class="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-700"
+            class="px-5 py-2 text-sm font-semibold rounded-md bg-primary text-white hover:bg-primary/90"
           >
             Previous
           </button>
           <button
             v-if="rooms.links.next"
             @click="changePage(rooms.links.next)"
-            class="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-700"
+            class="px-5 py-2 text-sm font-semibold rounded-md bg-primary text-white hover:bg-primary/90"
           >
             Next
           </button>
         </div>
       </div>
 
-      <!-- Message when no rooms are available -->
-      <div v-else>
-        <p>No available rooms at the moment.</p>
+      <div v-else class="text-center mt-12">
+        <p class="text-muted-foreground">No available rooms at the moment.</p>
       </div>
     </div>
   </template>
@@ -56,36 +67,12 @@
 
   const { rooms } = usePage().props;
 
-  // Function to change the page when clicking on pagination links
   const changePage = (url) => {
     Inertia.visit(url);
   };
 
-  // Function to handle navigation to reservation page
   const goToReservation = (roomId) => {
     console.log('Navigating to reservation for room:', roomId);
-    //Inertia.visit(`/client/reservations/rooms/${roomId}`);
     window.location.href = `/client/reservations/rooms/${roomId}`;
   };
   </script>
-
-  <style scoped>
-  /* Optional: Add custom styles for button */
-  button {
-    display: inline-block;
-    text-align: center;
-    background-color: #3b82f6;
-    color: white;
-    padding: 0.5rem 1rem;
-    border-radius: 0.375rem;
-    cursor: pointer;
-  }
-
-  button:hover {
-    background-color: #2563eb;
-  }
-
-  button:focus {
-    outline: none;
-  }
-  </style>
