@@ -26,6 +26,7 @@ export const getColumns = (
   },
   {
     accessorKey: 'creator.name',
+    // if 'isAdmin'
     header: () => h('div', { class: 'text-left' }, 'Manager Name'),
     cell: ({ row }) => {
       const creator = row.original.creator
@@ -37,6 +38,7 @@ export const getColumns = (
     header: () => h('div', { class: 'text-center' }, 'Actions'),
     cell: ({ row }) => {
       const floor = row.original
+      // if 'isManager'
       return h('div', { class: 'flex justify-center space-x-2' }, [
         h(
           'button',
