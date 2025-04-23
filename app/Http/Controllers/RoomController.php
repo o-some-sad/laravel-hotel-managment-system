@@ -20,7 +20,7 @@ class RoomController extends Controller
     {
         $user = Auth::user();
         $isAdmin = $user->hasRole('admin');
-        
+       
         // If admin, show all rooms with manager info
         // If manager, show only rooms created by this manager
         $query = Room::with('floor');

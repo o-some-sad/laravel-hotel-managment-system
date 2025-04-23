@@ -4,13 +4,14 @@ namespace App\Models;
 use Spatie\Permission\Traits\HasRoles;
 use Cog\Laravel\Ban\Traits\Bannable;
 
+
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class User extends Authenticatable
+class User extends Authenticatable implements \Cog\Contracts\Ban\Bannable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
@@ -25,6 +26,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'created_by',
         'national_id',
         'avatar_image',
         'mobile',
@@ -57,6 +59,7 @@ class User extends Authenticatable
             'password' => 'hashed',
             'last_login_at' => 'datetime',
             'approved_at' => 'datetime',
+            'banned_at' => 'datetime',
         ];
     }
 
@@ -105,4 +108,21 @@ class User extends Authenticatable
                     ->whereHas('roles', fn($q) => $q->where('name', 'client'));
     }
 
+    public function createdReceptionists()
+    {
+        return $this->hasMany(User::class, 'created_by')
+                ->whereHas('roles', fn($q) => $q->where('name', 'receptionist'));
+    }
+
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function receptionists()
+    {
+     return $this->hasMany(User::class, 'manager_id');
+    }
+
 }
+
