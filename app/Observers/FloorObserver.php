@@ -11,7 +11,7 @@ class FloorObserver
     // take the last floor number and increment by 1
     if (empty($floor->number)) {
             $lastFloor = Floor::orderBy('number', 'desc')->first();
-            $floor->number = $lastFloor ? $lastFloor->number + 1 : 1001;
+            $floor->number = $lastFloor ? $lastFloor->number + 1000 : 1000;
     // MUST start with 1000
         if ($floor->number < 1000) {
             throw new \Exception("Floor number must be at least 4 digits");
