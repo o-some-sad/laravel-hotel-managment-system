@@ -1,9 +1,26 @@
 <script setup>
-import { usePage } from '@inertiajs/vue3';
+import { usePage, router } from '@inertiajs/vue3';
 import DataTable from '@/components/ui/data-table.vue'; // shadcn DataTable
 import { Badge } from '@/components/ui/badge';
 import { Calendar, Hotel, ArrowRight } from 'lucide-vue-next';
 import { h } from 'vue';
+import { computed, watch, onMounted } from 'vue';
+
+// Get success message from URL (?success=...)
+const successMessage = computed(() => {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get('success');
+});
+
+// Optional: Clear the message after showing it
+onMounted(() => {
+  if (successMessage.value) {
+    setTimeout(() => {
+      // Remove 'success' from URL without reloading
+      router.replace({ query: {} });
+    }, 5000); // Hide after 5 seconds
+  }
+});
 
 // Get bookings from page props
 const { bookings } = usePage().props;
@@ -27,6 +44,14 @@ const getStatusColor = (status) => {
 
 <template>
   <div class="p-8">
+        <div 
+        v-if="successMessage" 
+        class="mb-4 p-4 bg-green-100 text-green-800 rounded-md"
+      >
+        {{ successMessage }}
+      </div>
+
+
     <h1 class="text-2xl font-bold mb-4">My Reservations</h1>
 
     <DataTable

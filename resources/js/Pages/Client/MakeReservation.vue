@@ -20,9 +20,10 @@ const submit = () => {
 
     form.post(route('reservations.store', room.id), {
         preserveScroll: true,
-        onSuccess: () => {
-            toast.success('Reservation created successfully! Proceeding to payment...');
-            router.visit(route('client.reservations.index'));
+        onSuccess: (page) => {
+          //console.log(response);
+            // toast.success('Reservation created successfully! Proceeding to payment...');
+            // router.visit(route('client.reservations.index'));
         },
         onError: () => {
             toast.error('Something went wrong! Please try again.');
