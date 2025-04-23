@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Floor;
+use App\Models\User;
 use App\Http\Requests\FloorManagerRequest;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
@@ -49,10 +50,19 @@ class FloorManagerController extends Controller
         // show ALL floors
         // eager-loading - creator is the function (including the relationship)
         // if is important, and name is the thing we wanna display in vue
+        $currentUser = User::find(Auth::id());
+        // $allFloors = Floor::all();
+        // if($currentUser->hasRole('admin')){}
         $allFloors = Floor::with('creator:id,name')->get();
         return Inertia::render('FloorManager/Index', [
             'floors' => $allFloors
         ]);
+        // return Inertia::render('FloorManager/Index', [
+        //     'floors' => $allFloors,
+        //     'isAdmin' => $currentUser->hasRole('admin'),
+        //     'isManager' => $currentUser->hasRole('manager'),
+        //     'currentUserID' => $currentUser->created_by,
+        // ]);
     }
 
     public function edit($id){
