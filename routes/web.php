@@ -47,11 +47,6 @@ Route::middleware('guest')->group(function () {
 
 Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
-Route::middleware(['auth', 'admin'])->group(function () {
-    Route::get('/managers', [ManagerReceptionistController::class, 'index'])->name('managers.index');
-});
-
-
 //Route::middleware(['auth', 'receptionist'])->group(function () {
     // Pending clients route
     Route::get('/clients/pending', [ReceptionistController::class, 'pendingClients'])
@@ -71,9 +66,9 @@ Route::middleware(['auth', 'admin'])->group(function () {
 //});
 
 
-Route::middleware('auth')->group(function() { 
+// Route::middleware(['auth', 'receptionist'])->group(function() { 
+//     Route::post('/managers/{user}/ban', [ManagerController::class, 'ban'])->name('managers.ban');
 
-Route::post('/managers/{user}/ban', [ManagerController::class, 'ban'])->name('managers.ban');
 Route::middleware('auth')->group(function() {
 
     Route::get('/floors', [FloorManagerController::class,'index'])->name('floor.index');});
@@ -94,6 +89,8 @@ Route::middleware('auth')->group(function () {
 });
 
 
+
+
 // Route::prefix('manager')->middleware(['auth', 'role:manager'])->group(function () {
 //     Route::resource('receptionists', ManagerReceptionistController::class)->except(['show']);
 //     Route::post('/receptionists/{receptionist}/toggle-ban', [ManagerReceptionistController::class, 'toggleBan'])->name('receptionists.toggle-ban');
@@ -105,6 +102,9 @@ Route::middleware('auth')->group(function () {
 //     ]);
 // })->middleware(['auth', \App\Http\Middleware\CheckReceptionistOwnership::class]);
 
+// Route::middleware(['auth', 'admin'])->group(function () {
+//     Route::get('/managers', [ManagerReceptionistController::class, 'index'])->name('managers.index');
+// });
 
 // Receptionist Management routes
 Route::prefix('manager')->middleware(['auth', 'role:manager'])->group(function () {
@@ -130,7 +130,7 @@ Route::prefix('manager')->middleware(['auth', 'role:manager'])->group(function (
 
     // Ban Receptionist routes
     Route::post('/receptionists/{receptionist}/toggle-ban', [ManagerReceptionistController::class, 'toggleBan'])
-        ->name('receptionists.toggle-ban');
+        ->name('manager.receptionists.toggle-ban');
 });
 
 // Route::post('/managers/{user}/ban', [ManagerReceptionistController::class, 'ban'])->name('managers.ban');

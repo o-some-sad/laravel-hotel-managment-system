@@ -68,6 +68,7 @@ class ReceptionistPolicy
 
     public function toggleBan(User $user, User $receptionist)
     {
-        return $user->id === $receptionist->created_by;
+        return $user->hasPermissionTo('manage own receptionists')
+         && $receptionist->created_by === $user->id;
     }
 }

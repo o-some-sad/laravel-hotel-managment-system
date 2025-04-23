@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue';
+import { router } from '@inertiajs/vue3';
 import DashboardLayout from '@/Layouts/DashboardLayout.vue';
 import { 
   Card, 
@@ -35,6 +36,10 @@ const recentBookings = [
   { id: 'B-1237', guest: 'Emily Davis', room: 'Family Suite', checkIn: '2023-07-15', checkOut: '2023-07-20', status: 'Confirmed' },
 ];
 
+const goToReceptionists = () => {
+  router.get('/manager/receptionists');
+};
+
 const getStatusColor = (status) => {
   switch (status) {
     case 'Confirmed':
@@ -58,6 +63,10 @@ const getStatusColor = (status) => {
           <Calendar class="mr-2 h-4 w-4" />
           View Calendar
         </Button>
+        <Button @click="goToReceptionists">
+            <Users class="mr-2 h-4 w-4" />
+            Manage Receptionists
+          </Button>
       </div>
       
       <!-- Stats Cards -->
@@ -129,3 +138,4 @@ const getStatusColor = (status) => {
     </div>
   </DashboardLayout>
 </template>
+
