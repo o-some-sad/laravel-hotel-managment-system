@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->string('national_id')->nullable()->unique();
+            $table->string('national_id')->unique();
             $table->string('avatar_image')->nullable();
             $table->string('mobile')->nullable();
             $table->char('country_code', 3)->nullable();
@@ -26,6 +26,7 @@ return new class extends Migration
             $table->timestamp('approved_at')->nullable();
             $table->foreignId('approved_by')->nullable()->constrained('users');
             $table->foreignId('manager_id')->nullable()->constrained('users');
+            $table->timestamp('banned_at')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
@@ -39,3 +40,5 @@ return new class extends Migration
         Schema::dropIfExists('users');
     }
 };
+
+

@@ -132,6 +132,7 @@ return [
      */
 
     'teams' => false,
+    'guard_name' => 'web',
 
     /*
      * The class to use to resolve the permissions team id

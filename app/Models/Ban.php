@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Ban extends Model
+class Ban extends Model 
 {
     public function user()
     {
