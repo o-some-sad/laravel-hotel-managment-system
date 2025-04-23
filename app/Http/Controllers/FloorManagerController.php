@@ -86,6 +86,7 @@ class FloorManagerController extends Controller
                 ->with('error', 'Floor editing failed. Please try again.');
         }
     }
+    
     public function delete($id){
         try{
             $floor = Floor::findOrFail($id);

@@ -38,7 +38,7 @@ class ClientApprovedNotification extends Notification implements ShouldQueue
             ->subject('Your account has been approved!')
             ->greeting('Hello ' . $notifiable->name . ' 🎉')
             ->line('Your account has been approved successfully.')
-            ->action('Login Now', url('/login'))
+            ->action('Login Now', url('http://127.0.0.1:8000/login'))
             ->line('Thank you for choosing our hotel!');
     }
 

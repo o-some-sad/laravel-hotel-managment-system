@@ -47,7 +47,7 @@ defineProps({
 </script>
 
 <template>
-  <header 
+  <header
     class="sticky top-0 z-50 w-full backdrop-blur transition-all duration-300"
     :class="[
       isScrolled ? 'bg-background/95 border-b shadow-sm' : 'bg-transparent'
@@ -58,15 +58,16 @@ defineProps({
       <div class="flex items-center gap-2">
         <Link href="/" class="font-bold text-xl">Hotel Management</Link>
       </div>
-      
+
       <!-- Desktop Navigation -->
-      <nav class="hidden md:flex items-center gap-6">
+      <!-- <nav class="hidden md:flex items-center gap-6"> -->
+        <nav class=" md:flex items-center gap-6">
         <Link href="/" class="text-sm font-medium transition-colors hover:text-primary">Home</Link>
         <Link href="/#services" class="text-sm font-medium transition-colors hover:text-primary">Services</Link>
         <Link href="/#testimonials" class="text-sm font-medium transition-colors hover:text-primary">Testimonials</Link>
         <Link href="/#contact" class="text-sm font-medium transition-colors hover:text-primary">Contact</Link>
       </nav>
-      
+
       <div class="flex items-center gap-4">
         <!-- Theme Toggle -->
         <Button variant="ghost" size="icon" @click="toggleTheme" class="rounded-full">
@@ -74,9 +75,10 @@ defineProps({
           <Moon v-else class="h-5 w-5" />
           <span class="sr-only">Toggle theme</span>
         </Button>
-        
+
         <!-- Desktop Auth Buttons -->
-        <div class="hidden md:flex items-center gap-2">
+        <!-- <div class="hidden md:flex items-center gap-2"> -->
+        <div class=" md:flex items-center gap-2">
           <template v-if="auth && auth.user">
             <DropdownMenu>
               <DropdownMenuTrigger as="div">
@@ -113,7 +115,7 @@ defineProps({
             </Link>
           </template>
         </div>
-        
+
         <!-- Mobile Menu Button -->
         <Sheet v-model:open="isOpen">
           <SheetTrigger as-child>
@@ -127,7 +129,7 @@ defineProps({
               <SheetHeader class="mb-6">
                 <SheetTitle>Hotel Management</SheetTitle>
               </SheetHeader>
-              
+
               <div class="flex-1 overflow-y-auto">
                 <nav class="flex flex-col space-y-4 mb-8">
                   <SheetClose as-child>
@@ -151,7 +153,7 @@ defineProps({
                     </Link>
                   </SheetClose>
                 </nav>
-                
+
                 <div class="border-t border-border pt-6">
                   <template v-if="auth && auth.user">
                     <div class="space-y-4">
@@ -189,7 +191,7 @@ defineProps({
                   </template>
                 </div>
               </div>
-              
+
               <div class="mt-auto pt-4 border-t border-border">
                 <div class="flex items-center justify-between">
                   <p class="text-sm text-muted-foreground">Switch theme</p>

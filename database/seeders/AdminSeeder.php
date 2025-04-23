@@ -20,14 +20,15 @@ class AdminSeeder extends Seeder
         $admin = User::updateOrCreate(
             ['email' => 'admin@admin.com'],
             [
-                'name' => 'Admin',
+                'name' => 'admin',
                 'password' => bcrypt('123456'),
                 'email_verified_at' => now(),
+                'national_id' => '0000000000',
             ]
         );
 
         
-        $admin->assignRole('Admin');
+        $admin->assignRole('admin');
 
         $this->command->info('Admin user created/updated successfully!');
     }
