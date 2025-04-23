@@ -20,20 +20,57 @@
       </div>
       
       <div class="rounded-md border">
-        <DataTable :columns="columns" :data="floors" />
+        <DataTable :columns="columns" :data="floors" :manualPagination="true"/>
       </div>
     </div>
   </div>
 </template>
   
 <script setup>
-import { router } from '@inertiajs/vue3'
+import { router, usePage } from '@inertiajs/vue3'
 import { useToast } from "vue-toastification"
 import { Button } from "@/components/ui/button"
 import DataTable from "./data-table.vue"
 import { getColumns } from "./columns"
+import { computed, watch, onMounted } from 'vue'
 
 const toast = useToast()
+// const page = usePage()
+
+// const flash = computed(() => page.props.flash)
+
+// // Watch for flash messages and display them
+// watch(flash, (newFlash) => {
+//   if (newFlash && newFlash.success) {
+//     toast.success(newFlash.success, {
+//       timeout: 2000,
+//       position: 'bottom-center',
+//     })
+//   }
+  
+//   if (newFlash && newFlash.error) {
+//     toast.error(newFlash.error, {
+//       timeout: 4000,
+//       position: 'bottom-center',
+//     })
+//   }
+// }, { immediate: true })
+
+// onMounted(() => {
+//   if (page.props.flash && page.props.flash.success) {
+//     toast.success(page.props.flash.success, {
+//       timeout: 2000,
+//       position: 'bottom-center',
+//     })
+//   }
+  
+//   if (page.props.flash && page.props.flash.error) {
+//     toast.error(page.props.flash.error, {
+//       timeout: 4000,
+//       position: 'bottom-center',
+//     })
+//   }
+// })
 
 const props = defineProps({
   floors: {
@@ -61,14 +98,20 @@ function confirmDelete(id) {
         })
       },
       onError: (errors) => {
-        toast.error('There was an error deleting the floor', {
-          timeout: 2000,
-          position: 'bottom-center'
-        })
+        if (errors && errors.error) {
+          toast.error(errors.error, {
+            timeout: 4000,
+            position: 'bottom-center'
+          })
+        } else {
+          toast.error('There was an error deleting the floor', {
+            timeout: 2000,
+            position: 'bottom-center'
+          })
+        }
       }
     })
   }
 }
-
 const columns = getColumns(editFloor, confirmDelete)
 </script>
