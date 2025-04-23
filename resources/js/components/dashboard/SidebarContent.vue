@@ -153,7 +153,7 @@ const toggleSection = (section) => {
           @click="setActiveTab('manager-rooms')"
         >
           <Bed class="h-4 w-4" />
-          <span>Room Status</span>
+          <span>Manage Rooms</span>
         </Button>
         <Button 
           variant="ghost" 

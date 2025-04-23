@@ -6,9 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('rooms', function (Blueprint $table) {
@@ -17,6 +14,7 @@ return new class extends Migration
             $table->unsignedInteger('number')->unique();
             $table->unsignedInteger('capacity');
             $table->unsignedBigInteger('price'); 
+            $table->string('image_url')->nullable(); // Add this line for storing Cloudinary URL
             $table->foreignId('created_by')->constrained('users');
             $table->timestamps();
         });
