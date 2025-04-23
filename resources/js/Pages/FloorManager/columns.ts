@@ -21,12 +21,12 @@ export const getColumns = (
   const columns: ColumnDef<Floor>[] = [
     {
       accessorKey: 'name',
-      header: () => h('div', { class: 'text-center' }, 'Name'),
+      header: () => h('div', { class: 'text-center font-bold' }, 'Name'),
       cell: ({ row }) => h('div', { class: 'text-center' }, row.getValue('name')),
     },
     {
       accessorKey: 'number',
-      header: () => h('div', { class: 'text-center' }, 'Number'),
+      header: () => h('div', { class: 'text-center font-bold' }, 'Number'),
       cell: ({ row }) => h('div', { class: 'text-center' }, row.getValue('number')),
     }
   ];
@@ -35,7 +35,7 @@ export const getColumns = (
   if (isAdmin) {
     columns.push({
       accessorKey: 'creator.name',
-      header: () => h('div', { class: 'text-center' }, 'Manager Name'),
+      header: () => h('div', { class: 'text-center font-bold' }, 'Manager Name'),
       cell: ({ row }) => {
         const creator = row.original.creator
         return h('div', { class: 'text-center' }, creator?.name || 'Not Available')
@@ -47,7 +47,7 @@ export const getColumns = (
   if (isManager) {
   columns.push({
     id: 'actions',
-    header: () => h('div', { class: 'text-center' }, 'Actions'),
+    header: () => h('div', { class: 'text-center font-bold' }, 'Actions'),
     cell: ({ row }) => {
       const floor = row.original
 
@@ -60,7 +60,7 @@ export const getColumns = (
       // - User is the manager who created this floor
       const canManage = isManager && floor.creator && floor.creator.id === userId;
       if (!canManage) {
-        return h('div', { class: 'text-gray-400 flex justify-center space-x-2' },['Only creator can edit/delete'])
+        return h('div', { class: 'text-gray-600 font-bold flex justify-center space-x-2' },['Only creator can edit/delete'])
         }
 
       return h('div', { class: 'flex justify-center space-x-2' }, [

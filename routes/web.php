@@ -72,16 +72,14 @@ Route::get('/clients/reservations', [ReceptionistController::class, 'clientsRese
 //});
 
 
-Route::middleware('auth')->group(function() {
-
+Route::middleware('auth'/*,'role:manager|admin'*/)->group(function() {
     Route::post('/managers/{user}/ban', [ManagerController::class, 'ban'])->name('managers.ban');
-
-    Route::get('/floors', [FloorManagerController::class,'index'])->name('floor.index');
-    Route::get('/addFloor', [FloorManagerController::class,'create'])->name('floor.create');
-    Route::post('/storeFloor', [FloorManagerController::class, 'store'])->name('floor.store');
-    Route::get('/editFloor/{id}', [FloorManagerController::class, 'edit'])->name('floor.edit');
-    Route::put('/updateFloor/{id}', [FloorManagerController::class, 'update'])->name('floor.update');
-    Route::delete('/delFloor/{id}', [FloorManagerController::class, 'delete'])->name('floor.delete');
+    Route::get('/dashboard/floors', [FloorManagerController::class,'index'])->name('floor.index');
+    Route::get('/dashboard/addFloor', [FloorManagerController::class,'create'])->name('floor.create');
+    Route::post('/dashboard/storeFloor', [FloorManagerController::class, 'store'])->name('floor.store');
+    Route::get('/dashboard/editFloor/{id}', [FloorManagerController::class, 'edit'])->name('floor.edit');
+    Route::put('/dashboard/updateFloor/{id}', [FloorManagerController::class, 'update'])->name('floor.update');
+    Route::delete('/dashboard/delFloor/{id}', [FloorManagerController::class, 'delete'])->name('floor.delete');
 });
 
 

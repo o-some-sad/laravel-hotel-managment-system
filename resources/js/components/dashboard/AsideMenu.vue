@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from '@inertiajs/vue3';
 import {
   Bed,
+  ArrowUpNarrowWide,
   Home,
   Menu,
   X
@@ -26,6 +27,12 @@ const navigation = [
     icon: Bed,
     route: route('rooms.index'),
     active: (route) => route.includes('rooms')
+  },
+  {
+  title: 'Floors',
+    icon: ArrowUpNarrowWide,
+    route: route('floor.index'),
+    active: (route) => route.includes('floor')
   },
 ];
 
