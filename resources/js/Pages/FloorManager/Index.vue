@@ -35,49 +35,12 @@ import { getColumns } from "./columns"
 import { computed, watch, onMounted } from 'vue'
 
 const toast = useToast()
-// const page = usePage()
-
-// const flash = computed(() => page.props.flash)
-
-// // Watch for flash messages and display them
-// watch(flash, (newFlash) => {
-//   if (newFlash && newFlash.success) {
-//     toast.success(newFlash.success, {
-//       timeout: 2000,
-//       position: 'bottom-center',
-//     })
-//   }
-  
-//   if (newFlash && newFlash.error) {
-//     toast.error(newFlash.error, {
-//       timeout: 4000,
-//       position: 'bottom-center',
-//     })
-//   }
-// }, { immediate: true })
-
-// onMounted(() => {
-//   if (page.props.flash && page.props.flash.success) {
-//     toast.success(page.props.flash.success, {
-//       timeout: 2000,
-//       position: 'bottom-center',
-//     })
-//   }
-  
-//   if (page.props.flash && page.props.flash.error) {
-//     toast.error(page.props.flash.error, {
-//       timeout: 4000,
-//       position: 'bottom-center',
-//     })
-//   }
-// })
 
 const props = defineProps({
-  floors: {
-    type: Array,
-    required: true,
-    default: () => []
-  }
+  floors: Array,
+  isAdmin: Boolean,
+  isManager: Boolean,
+  userId: Number
 })
 
 function addFloor() {
@@ -91,27 +54,29 @@ function editFloor(id) {
 function confirmDelete(id) {
   if (confirm('Are you sure you want to delete this floor?')) {
     router.delete(`/delFloor/${id}`, {
-      onSuccess: () => {
-        toast.success('Floor deleted successfully!', {
-          timeout: 2000,
-          position: 'bottom-center',
-        })
-      },
-      onError: (errors) => {
-        if (errors && errors.error) {
-          toast.error(errors.error, {
+      onSuccess: (page) => {
+        const floorStillExists = props.floors.some(floor => floor.id === id);
+        if (floorStillExists) {
+          toast.error("Can't delete floor as there are rooms assigned to it", {
             timeout: 4000,
             position: 'bottom-center'
-          })
+          });
         } else {
-          toast.error('There was an error deleting the floor', {
+          toast.success('Floor deleted successfully!', {
             timeout: 2000,
-            position: 'bottom-center'
-          })
+            position: 'bottom-center',
+          });
         }
+      },
+      onError: (errors) => {
+        toast.error(errors.error || "Can't delete floor as there are rooms assigned to it", {
+          timeout: 4000,
+          position: 'bottom-center'
+        });
       }
-    })
+    });
   }
 }
-const columns = getColumns(editFloor, confirmDelete)
+
+const columns = getColumns(editFloor, confirmDelete, props.isAdmin, props.isManager, props.userId)
 </script>

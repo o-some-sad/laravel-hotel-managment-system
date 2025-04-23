@@ -47,22 +47,25 @@ class FloorManagerController extends Controller
     // }
 
     public function index(){
-        // show ALL floors
-        // eager-loading - creator is the function (including the relationship)
-        // if is important, and name is the thing we wanna display in vue
         $currentUser = User::find(Auth::id());
-        // $allFloors = Floor::all();
-        // if($currentUser->hasRole('admin')){}
+        // used eager-loading to get the creator's name
         $allFloors = Floor::with('creator:id,name')->get();
+        
+        if($currentUser->hasRole('Admin')){
+            return Inertia::render('FloorManager/Index', [
+                'floors' => $allFloors,
+                'isAdmin' => true,
+                'userId' => Auth::id()
+            ]);
+        }   
+        
         return Inertia::render('FloorManager/Index', [
-            'floors' => $allFloors
+            'floors' => $allFloors,
+            // 'isAdmin' => $currentUser->hasRole('admin'),
+            'isManager' => true,
+            // 'isManager' => $currentUser->hasRole('Manager'),
+            'userId' => Auth::id() 
         ]);
-        // return Inertia::render('FloorManager/Index', [
-        //     'floors' => $allFloors,
-        //     'isAdmin' => $currentUser->hasRole('admin'),
-        //     'isManager' => $currentUser->hasRole('manager'),
-        //     'currentUserID' => $currentUser->created_by,
-        // ]);
     }
 
     public function edit($id){
