@@ -44,26 +44,25 @@ export const getColumns = (
   }
 
   // Add actions column if user is a manager (for their own floors)
-  // if (isManager) {
+  if (isManager) {
   columns.push({
     id: 'actions',
     header: () => h('div', { class: 'text-center' }, 'Actions'),
     cell: ({ row }) => {
       const floor = row.original
 
-      console.log('Floor Creator:', floor.creator);
-      console.log('Floor Creator ID:', floor.creator?.id);
-      console.log('Current User ID:', userId);
-      console.log('Is Manager:', isManager);
-      
-      
+      // console.log('Floor Creator:', floor.creator);
+      // console.log('Floor Creator ID:', floor.creator?.id);
+      // console.log('Current User ID:', userId);
+      // console.log('Is Manager:', isManager);
+    
       // Only show edit/delete buttons if:
       // - User is the manager who created this floor
       const canManage = isManager && floor.creator && floor.creator.id === userId;
       if (!canManage) {
-        return null;
-      }
-      
+        return h('div', { class: 'text-gray-400 flex justify-center space-x-2' },['Only creator can edit/delete'])
+        }
+
       return h('div', { class: 'flex justify-center space-x-2' }, [
         h(
           'button',
@@ -84,7 +83,7 @@ export const getColumns = (
       ])
     },
   });
-// }
+}
 
   return columns;
 }
