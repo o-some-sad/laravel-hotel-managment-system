@@ -92,10 +92,5 @@ class StripeController extends Controller
         return Inertia::location(route('client.reservations.index', [
             'success' => 'Payment successful! Your room has been reserved.',
         ]));
-}
-
-    public function cancel()
-    {
-        return view('cancel');
     }
 }
