@@ -32,11 +32,6 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import DashboardHeader from '@/components/dashboard/DashboardHeader.vue';
-import DashboardSidebar from '@/components/dashboard/DashboardSidebar.vue';
-import StatsCards from '@/components/dashboard/StatsCards.vue';
-import RecentBookings from '@/components/dashboard/RecentBookings.vue';
-import ActivityFeed from '@/components/dashboard/ActivityFeed.vue';
 
 const { theme, toggleTheme } = useTheme();
 const props = defineProps({

@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Models\Floor;
+// use Illuminate/Container/Attributes/Log;
 
 class FloorObserver
 {
@@ -28,9 +29,15 @@ class FloorObserver
         }
     }
 
-    public function deleted(Floor $floor): void
+    public function deleting(Floor $floor): void
     {
-        //
+        if ($floor->rooms()->count() > 0) {
+            // Log::warning('Attempted to delete floor #' . $floor->number . ' with existing rooms', [
+            //     'floor_id' => $floor->id,
+            //     'room_count' => $floor->rooms()->count()
+            // ]);
+            abort(403, "Can't delete floor as there are rooms assigned to it");
+        }
     }
 
     public function restored(Floor $floor): void

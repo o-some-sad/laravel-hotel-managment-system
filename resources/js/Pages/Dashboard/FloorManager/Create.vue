@@ -31,7 +31,7 @@ const form = reactive({
 })
 
 function submitForm() {
-  router.post('/storeFloor', form, {
+  router.post('/dashboard/storeFloor', form, {
     onSuccess: () => {
       form.name = ''
       toast.success('Floor added successfully!', {

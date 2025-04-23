@@ -16,7 +16,7 @@ class FloorManagerController extends Controller
     public function create()
     {
         $addFloor = Floor::all();
-        return Inertia::render('FloorManager/Create', [
+        return Inertia::render('Dashboard/FloorManager/Create', [
             'floors' => $addFloor
         ]);
     }
@@ -47,28 +47,31 @@ class FloorManagerController extends Controller
     // }
 
     public function index(){
-        // show ALL floors
-        // eager-loading - creator is the function (including the relationship)
-        // if is important, and name is the thing we wanna display in vue
         $currentUser = User::find(Auth::id());
-        // $allFloors = Floor::all();
-        // if($currentUser->hasRole('admin')){}
+        // used eager-loading to get the creator's name
         $allFloors = Floor::with('creator:id,name')->get();
-        return Inertia::render('FloorManager/Index', [
-            'floors' => $allFloors
+        
+        if($currentUser->hasRole('Admin')){
+            return Inertia::render('Dashboard/FloorManager/Index', [
+                'floors' => $allFloors,
+                'isAdmin' => true,
+                'userId' => Auth::id()
+            ]);
+        }   
+        
+        return Inertia::render('Dashboard/FloorManager/Index', [
+            'floors' => $allFloors,
+            // 'isAdmin' => $currentUser->hasRole('admin'),
+            'isManager' => true,
+            // 'isManager' => $currentUser->hasRole('Manager'),
+            'userId' => Auth::id() 
         ]);
-        // return Inertia::render('FloorManager/Index', [
-        //     'floors' => $allFloors,
-        //     'isAdmin' => $currentUser->hasRole('admin'),
-        //     'isManager' => $currentUser->hasRole('manager'),
-        //     'currentUserID' => $currentUser->created_by,
-        // ]);
     }
 
     public function edit($id){
         // edit a floor
         $floorID = Floor::findOrFail($id);
-        return Inertia::render('FloorManager/Edit', [
+        return Inertia::render('Dashboard/FloorManager/Edit', [
             'floor' => $floorID
         ]);
     }
