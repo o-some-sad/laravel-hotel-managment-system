@@ -8,6 +8,7 @@ use App\Http\Controllers\ManagerController;
 use App\Http\Controllers\ReceptionistController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\FloorManagerController;
+use App\Http\Controllers\RoomController;
 
 
 Route::get('/', function () {
@@ -82,6 +83,16 @@ Route::middleware('auth')->group(function () {
 });
 Route::middleware('auth')->group(function () {
     Route::delete('/delFloor/{id}', [FloorManagerController::class, 'delete'])->name('floor.delete');
+});
+
+// Room management routes
+Route::middleware(['auth' /*,'role:manager|admin'*/])->group(function () {
+    Route::get('/dashboard/rooms', [RoomController::class, 'index'])->name('rooms.index');
+    Route::get('/dashboard/rooms/create', [RoomController::class, 'create'])->name('rooms.create');
+    Route::post('/dashboard/rooms', [RoomController::class, 'store'])->name('rooms.store');
+    Route::get('/dashboard/rooms/{room}/edit', [RoomController::class, 'edit'])->name('rooms.edit');
+    Route::put('/dashboard/rooms/{room}', [RoomController::class, 'update'])->name('rooms.update');
+    Route::delete('/dashboard/rooms/{room}', [RoomController::class, 'destroy'])->name('rooms.destroy');
 });
 
 require __DIR__.'/auth.php';

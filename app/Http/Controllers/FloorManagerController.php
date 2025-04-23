@@ -76,10 +76,18 @@ class FloorManagerController extends Controller
                 ->with('error', 'Floor editing failed. Please try again.');
         }
     }
+    
     public function delete($id){
         $floor = Floor::findOrFail($id);
+
+        // Check if floor has rooms
+        if ($floor->rooms()->exists()) {
+            return back()->with('error', 'Cannot delete floor with existing rooms');
+        }
+        
         $floor->delete();
-        return redirect()
-        ->route('floor.index');
+        
+        return back()->with('success', 'Floor deleted successfully');
+     
     }
 }
