@@ -37,7 +37,7 @@
         name: props.floor.name
     })
     function submitForm() {
-        router.put(`/updateFloor/${form.id}`, form, {
+        router.put(`/dashboard/updateFloor/${form.id}`, form, {
     onSuccess: () => {
       form.name = ''
       toast.success('Floor edited successfully!', {
