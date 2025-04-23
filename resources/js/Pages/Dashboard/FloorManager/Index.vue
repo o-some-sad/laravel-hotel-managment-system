@@ -25,7 +25,8 @@ function editFloor(id) {
 }
 
 function confirmDelete(id) {
-  if (confirm('Are you sure you want to delete this floor?')) {
+  const floor = props.floors.find(f => f.id === id);
+  if (confirm(`Are you sure you want to delete floor number ${floor?.number} ?`)) {
     router.delete(`/dashboard/delFloor/${id}`, {
       onSuccess: (page) => {
         const floorStillExists = props.floors.some(floor => floor.id === id);
