@@ -51,7 +51,7 @@ function confirmDelete(id) {
   }
 }
 
-const columns = getColumns(editFloor, confirmDelete, props.isAdmin, props.isManager, props.userId)
+const columns = computed(() => getColumns(editFloor, confirmDelete, props.isAdmin, props.isManager, props.userId))
 </script>
 
 <template>
