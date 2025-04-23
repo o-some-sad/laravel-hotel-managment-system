@@ -16,7 +16,7 @@ class FloorManagerController extends Controller
     public function create()
     {
         $addFloor = Floor::all();
-        return Inertia::render('FloorManager/Create', [
+        return Inertia::render('Dashboard/FloorManager/Create', [
             'floors' => $addFloor
         ]);
     }
@@ -52,14 +52,14 @@ class FloorManagerController extends Controller
         $allFloors = Floor::with('creator:id,name')->get();
         
         if($currentUser->hasRole('Admin')){
-            return Inertia::render('FloorManager/Index', [
+            return Inertia::render('Dashboard/FloorManager/Index', [
                 'floors' => $allFloors,
                 'isAdmin' => true,
                 'userId' => Auth::id()
             ]);
         }   
         
-        return Inertia::render('FloorManager/Index', [
+        return Inertia::render('Dashboard/FloorManager/Index', [
             'floors' => $allFloors,
             // 'isAdmin' => $currentUser->hasRole('admin'),
             'isManager' => true,
@@ -71,7 +71,7 @@ class FloorManagerController extends Controller
     public function edit($id){
         // edit a floor
         $floorID = Floor::findOrFail($id);
-        return Inertia::render('FloorManager/Edit', [
+        return Inertia::render('Dashboard/FloorManager/Edit', [
             'floor' => $floorID
         ]);
     }
