@@ -13,6 +13,7 @@ use App\Http\Controllers\ManagerReceptionistController;
 use App\Models\User;
 use Spatie\Permission\Middleware\RoleMiddleware;
 use App\Http\Controllers\RoomController;
+use App\Http\Controllers\StripeController;
 
 
 
@@ -53,24 +54,23 @@ Route::middleware(['auth', 'admin'])->group(function () {
 });
 
 
-//Route::middleware(['auth', 'receptionist'])->group(function () {
-// Pending clients route
-Route::get('/clients/pending', [ReceptionistController::class, 'pendingClients'])
-    ->name('receptionist.pending-clients');
+Route::middleware(['auth', 'role:receptionist'])->group(function () {
+    // Pending clients route
+    Route::get('/clients/pending', [ReceptionistController::class, 'pendingClients'])
+        ->name('receptionist.pending-clients');
 
-// Approve client route
-Route::post('/clients/{user}/approve', [ReceptionistController::class, 'approveClient'])
-    ->name('receptionist.approve-client');
+    // Approve client route
+    Route::post('/clients/{user}/approve', [ReceptionistController::class, 'approveClient'])
+        ->name('receptionist.approve-client');
 
-// My approved clients route
-Route::get('/clients/approved', [ReceptionistController::class, 'approvedClients'])
-    ->name('receptionist.approved-clients');
+    // My approved clients route
+    Route::get('/clients/approved', [ReceptionistController::class, 'approvedClients'])
+        ->name('receptionist.approved-clients');
 
-// Clients reservations route
-Route::get('/clients/reservations', [ReceptionistController::class, 'clientsReservations'])
-    ->name('receptionist.clients-reservations');
-//});
-
+    // Clients reservations route
+    Route::get('/clients/reservations', [ReceptionistController::class, 'clientsReservations'])
+        ->name('receptionist.clients-reservations');
+});
 
 Route::middleware('auth'/*,'role:manager|admin'*/)->group(function() {
     Route::post('/managers/{user}/ban', [ManagerController::class, 'ban'])->name('managers.ban');
@@ -148,6 +148,12 @@ Route::middleware(['auth'])->group(function () {
         ->name('reservations.create');
         Route::post('/reservations/rooms/{room}', [ReservationController::class, 'store'])->name('reservations.store');
 });
+
+
+// Route::get('/checkout', [StripeController::class, 'showCheckout'])->name('stripe.checkout');
+Route::get('/create-checkout-session/{reservation}', [StripeController::class, 'createCheckoutSession'])->name('stripe.session');
+Route::get('/success', [StripeController::class, 'success'])->name('stripe.success');
+Route::get('/cancel', [StripeController::class, 'cancel'])->name('stripe.cancel');
 
 require __DIR__.'/auth.php';
 

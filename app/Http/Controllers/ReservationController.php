@@ -61,7 +61,7 @@ class ReservationController extends Controller
         // Later after successful Stripe checkout, we update it as paid
 
         // (Temporary) redirect to reservations page (we will soon connect Stripe)
-        return redirect()->route('client.reservations.index')->with('success', 'Reservation created! Proceed to payment.');
+        return redirect()->route('stripe.session', ['reservation' => $reservation]);
     }
     public function availableRooms()
     {

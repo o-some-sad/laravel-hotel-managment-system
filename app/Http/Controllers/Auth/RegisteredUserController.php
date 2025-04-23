@@ -23,11 +23,17 @@ class RegisteredUserController extends Controller
      */
     public function create(): Response
     {
-        $countries = Country::select('id', 'official_name')
-        ->where('is_visible', 1)
-        ->get();
+        // $countries = Country::select('id', 'official_name')
+        // ->where('is_visible', 1)
+        // ->get();
 
 
+        $countries = Country::with('translations')
+            ->where('is_visible', 1)
+            ->get()
+            ->sortBy('translations.0.name')
+            ->values();
+            
         return Inertia::render('Auth/Register', [
             'countries' => $countries,
         ]);
