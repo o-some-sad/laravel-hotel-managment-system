@@ -9,12 +9,14 @@ use App\Models\Manager;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Facades\Storage;
 
 class ManagerReceptionistController extends Controller
 {
     use AuthorizesRequests;
     public function index()
     {
+        $this->authorize('viewAny', User::class);
         $receptionists =  User::role('receptionist')
         ->where('created_by', Auth::id())
         ->with(['creator' => function($query) {
@@ -27,7 +29,8 @@ class ManagerReceptionistController extends Controller
                     'id' => $user->id,
                     'name' => $user->name,
                     'email' => $user->email,
-                    'created_at' => $user->created_at->diffForHumans()
+                    'created_at' => $user->created_at->diffForHumans(),
+                    'banned_at' => $user->banned_at?->toDateTimeString(),
                 ])
             ]);
     }
@@ -35,12 +38,13 @@ class ManagerReceptionistController extends Controller
     public function create()
     {
         $this->authorize('create', User::class);
-         return Inertia::render('Manager/Receptionists/Create');
+         return Inertia('Manager/Receptionists/Create');
         
     }
 
     public function store(Request $request)
     {
+        $this->authorize('create', User::class);
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users',
@@ -56,7 +60,7 @@ class ManagerReceptionistController extends Controller
             'national_id' => $request->national_id,
             'created_by' => Auth::id(),
             'avatar_image' => $request->file('avatar_image') ? 
-                $request->file('avatar_image')->store('public/avatars') : 'default.jpg'
+                $request->file('avatar_image')->store('avatars', 'public') : 'default.jpg'
         ]);
 
         $user->assignRole('receptionist');
@@ -68,13 +72,13 @@ class ManagerReceptionistController extends Controller
         }
         $user->save();
 
-        return Inertia::render('Manager/Receptionists/Create');
+        return redirect()->route('manager.receptionists.index');
     }
 
     public function edit(User $receptionist)
     {
         $this->authorize('update', $receptionist);
-        return Inertia::render('Manager/Receptionists/Edit', [
+        return Inertia('Manager/Receptionists/Edit', [
         'receptionist' => $receptionist
         ]);
     }
@@ -92,31 +96,43 @@ class ManagerReceptionistController extends Controller
 
         $receptionist->update($request->except('avatar'));
 
-        if ($request->password) {
-            $receptionist->password = bcrypt($request->password);
+        if ($request->hasFile('avatar_image')) {
+            if ($receptionist->avatar_image !== 'default-avatar.jpg') {
+                Storage::disk('public')->delete($receptionist->avatar_image);
+            }
+            $avatarPath = $request->file('avatar_image')->store('avatars', 'public');
+        } else {
+            $avatarPath = $receptionist->avatar_image;
         }
 
-        if ($request->hasFile('avatar_image')) {
-            $receptionist->avatar_image = $request->file('avatar_image')->store('avatars');
-        }
+        $receptionist->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'national_id' => $request->national_id,
+            'avatar_image' => $avatarPath,
+        ]);
 
         $receptionist->save();
 
-        return Inertia::render('Manager/Receptionists/Edit', [
-            'receptionist' => $receptionist
-        ]);
+        return redirect()->route('manager.receptionists.index');
     }
 
     public function destroy(User $receptionist)
     {
         $this->authorize('delete', $receptionist);
+
+        if ($receptionist->avatar_image !== 'default-avatar.jpg') {
+            Storage::disk('public')->delete($receptionist->avatar_image);
+        }
+
         $receptionist->delete();
-        return back();
+
+        return redirect()->back();
     }
 
     public function toggleBan(User $receptionist)
     {
-        $this->authorize('update', $receptionist);
+        $this->authorize('toggleBan', $receptionist);
         $receptionist->isBanned() ? $receptionist->unban() : $receptionist->ban();
         return redirect()->back();
     }

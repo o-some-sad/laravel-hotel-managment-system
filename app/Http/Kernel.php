@@ -10,3 +10,4 @@ class Kernel
         'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
     ];
 }
+

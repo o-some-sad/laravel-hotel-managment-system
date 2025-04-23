@@ -4,12 +4,15 @@ namespace App\Policies;
 
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class ReceptionistPolicy
 {
     /**
      * Determine whether the user can view any models.
      */
+    use HandlesAuthorization;
+
     public function viewAny(User $user): bool
     {
         return $user->hasRole('manager');
@@ -36,8 +39,7 @@ class ReceptionistPolicy
      */
     public function update(User $user, User $receptionist): bool
     {
-        return $user->hasRole('manager') && 
-        $receptionist->created_by === $user->id;
+        return $user->id === $receptionist->created_by;
     }
 
     /**
@@ -45,7 +47,7 @@ class ReceptionistPolicy
      */
     public function delete(User $user, User $receptionist): bool
     {
-        return $this->update($user, $receptionist);
+        return $user->id === $receptionist->created_by;
     }
 
     /**
@@ -62,5 +64,10 @@ class ReceptionistPolicy
     public function forceDelete(User $user, User $model): bool
     {
         return false;
+    }
+
+    public function toggleBan(User $user, User $receptionist)
+    {
+        return $user->id === $receptionist->created_by;
     }
 }
