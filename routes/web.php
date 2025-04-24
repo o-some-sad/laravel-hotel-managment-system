@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\ManagerController;
 use App\Http\Controllers\ReceptionistController;
+use App\Http\Controllers\ManageReceptionistController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\FloorManagerController;
 use App\Http\Controllers\ManagerReceptionistController;
@@ -157,6 +158,24 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/client/reservations/rooms/{room}', [ReservationController::class, 'create'])
         ->name('reservations.create');
         Route::post('/reservations/rooms/{room}', [ReservationController::class, 'store'])->name('reservations.store');
+});
+
+// Admin-only Receptionist Management routes
+Route::middleware(['auth', 'role:Admin'])->prefix('dashboard')->group(function () {
+    // Receptionists routes
+    Route::get('/receptionists', [ManageReceptionistController::class, 'adminIndex'])
+        ->name('dashboard.receptionists.index');
+    Route::get('/receptionists/create', [ManageReceptionistController::class, 'adminCreate'])
+        ->name('dashboard.receptionists.create');
+    Route::post('/receptionists', [ManageReceptionistController::class, 'adminStore'])
+        ->name('dashboard.receptionists.store');
+    Route::get('/receptionists/{receptionist}/edit', [ManageReceptionistController::class, 'adminEdit'])
+        ->name('dashboard.receptionists.edit');
+    Route::put('/receptionists/{receptionist}', [ManageReceptionistController::class, 'adminUpdate'])
+        ->name('dashboard.receptionists.update');
+    Route::delete('/receptionists/{receptionist}', [ManageReceptionistController::class, 'adminDestroy'])
+        ->name('dashboard.receptionists.destroy');
+  
 });
 
 

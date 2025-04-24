@@ -42,6 +42,13 @@ const navigation = [
     active: (route) => route.includes('managers'),
     requiresAdmin: true
   },
+  {
+    title: 'Manage Receptionists',
+    icon: Users,
+    route: route('dashboard.receptionists.index'),
+    active: (route) => route.includes('dashboard.receptionists'),
+    requiresAdmin: true
+  },
 ];
 
 const currentRoute = route().current();
