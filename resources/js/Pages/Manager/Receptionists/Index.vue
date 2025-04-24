@@ -22,6 +22,8 @@
               <TableRow>
                 <TableHead>Name</TableHead>
                 <TableHead>Email</TableHead>
+                <TableHead>National ID</TableHead>
+                <TableHead>Gender</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
@@ -30,6 +32,8 @@
               <TableRow v-for="receptionist in receptionists.data" :key="receptionist.id">
                 <TableCell>{{ receptionist.name }}</TableCell>
                 <TableCell>{{ receptionist.email }}</TableCell>
+                <TableCell>{{ receptionist.national_id }}</TableCell>
+                <TableCell>{{ receptionist.gender }}</TableCell>
                 <TableCell>
                   <Badge :variant="receptionist.banned_at ? 'destructive' : 'success'">
                     {{ receptionist.banned_at ? 'Banned' : 'Active' }}

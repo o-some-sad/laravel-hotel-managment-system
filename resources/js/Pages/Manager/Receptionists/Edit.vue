@@ -64,6 +64,20 @@
                 />
                 <p v-if="form.errors.national_id" class="text-red-500 text-sm mt-1">{{ form.errors.national_id }}</p>
               </div>
+  
+              <!-- Gender Dropdown -->
+              <div>
+                <label class="block text-sm font-medium mb-1">Gender</label>
+                <select 
+                  v-model="form.gender" 
+                  class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
+                >
+                  <option value="" disabled>Select gender</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                </select>
+                <p v-if="form.errors.gender" class="text-red-500 text-sm mt-1">{{ form.errors.gender }}</p>
+              </div>
             </form>
           </CardContent>
           <CardFooter class="flex justify-end gap-4">
@@ -108,6 +122,7 @@
     email: props.receptionist.email,
     password: '',
     national_id: props.receptionist.national_id,
+    gender: props.receptionist.gender, // Initialize with the current gender
   });
   
   const submitForm = () => {

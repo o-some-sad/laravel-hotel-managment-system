@@ -55,6 +55,14 @@ class ManagerReceptionistController extends Controller
                 'email' => $user->email,
                 'created_at' => $user->created_at->diffForHumans(),
                 'banned_at' => $user->banned_at?->toDateTimeString(),
+                'avatar_image' => $user->avatar_image,
+                'created_by' => $user->creator->name ?? 'none',
+                'gender' => $user->gender,
+                'mobile' => $user->mobile,
+                'country_code' => $user->country_code,
+                'national_id' => $user->national_id,
+                'last_login_at' => $user->last_login_at?->diffForHumans(),
+                'isBanned' => $user->isBanned(),
             ]),
             'isAdmin' => $isAdmin,
             'userRole' => $user->roles->first()->name ?? 'none'
@@ -82,6 +90,9 @@ class ManagerReceptionistController extends Controller
             'password' => 'required|string|min:6',
             'national_id' => 'required|unique:users,national_id',
             'avatar_image' => 'nullable|image|mimes:jpg,jpeg,png',
+            'mobile' => 'nullable|string|max:15',
+            'country_code' => 'nullable|string|max:5',
+            
         ]);
 
         $user = User::create([
@@ -89,6 +100,9 @@ class ManagerReceptionistController extends Controller
             'email' => $request->email,
             'password' => bcrypt($request->password),
             'national_id' => $request->national_id,
+            'mobile' => $request->mobile,
+            'country_code' => $request->country_code,
+            'gender' => $request->gender,
             'created_by' => Auth::id(),
             'avatar_image' => $request->file('avatar_image') ? 
                 $request->file('avatar_image')->store('avatars', 'public') : 'default.jpg'
@@ -121,6 +135,7 @@ class ManagerReceptionistController extends Controller
             'email' => 'required|email|unique:users,email,' . $receptionist->id,
             'national_id' => 'required|unique:users,national_id,' . $receptionist->id,
             'password' => 'nullable|string|min:6',
+
             'avatar_image' => 'nullable|image|mimes:jpg,jpeg,png',
         ]);
 
@@ -138,7 +153,12 @@ class ManagerReceptionistController extends Controller
             'email' => $request->email,
             'national_id' => $request->national_id,
             'avatar_image' => $avatarPath,
+            'mobile' => $request->mobile,
+            'country_code' => $request->country_code,
+            'gender' => $request->gender,
+            'password' => $request->password ? bcrypt($request->password) : $receptionist->password,
         ]);
+        $receptionist->save();
 
         return redirect()->route('manager.receptionists.index');
     }
