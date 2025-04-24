@@ -5,7 +5,8 @@ import {
   Bed,
   Home,
   Menu,
-  X
+  X,
+  Users
 } from 'lucide-vue-next';
 
 const props = defineProps({
@@ -26,6 +27,12 @@ const navigation = [
     icon: Bed,
     route: route('rooms.index'),
     active: (route) => route.includes('rooms')
+  },
+  {
+    title: 'Manager Receptionists', 
+    icon: Users,
+    route: route('manager.receptionists.index'),
+    active: (route) => route.includes('receptionists')
   },
 ];
 

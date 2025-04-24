@@ -65,10 +65,6 @@ Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name(
         ->name('receptionist.clients-reservations');
 //});
 
-
-// Route::middleware(['auth', 'receptionist'])->group(function() { 
-//     Route::post('/managers/{user}/ban', [ManagerController::class, 'ban'])->name('managers.ban');
-
 Route::middleware('auth')->group(function() {
 
     Route::get('/floors', [FloorManagerController::class,'index'])->name('floor.index');});
@@ -87,24 +83,6 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::delete('/delFloor/{id}', [FloorManagerController::class, 'delete'])->name('floor.delete');
 });
-
-
-
-
-// Route::prefix('manager')->middleware(['auth', 'role:manager'])->group(function () {
-//     Route::resource('receptionists', ManagerReceptionistController::class)->except(['show']);
-//     Route::post('/receptionists/{receptionist}/toggle-ban', [ManagerReceptionistController::class, 'toggleBan'])->name('receptionists.toggle-ban');
-// });
-
-// Route::get('/receptionists/{user}', function (User $user) {
-//     return Inertia::render('Receptionist/Show', [
-//         'receptionist' => $user
-//     ]);
-// })->middleware(['auth', \App\Http\Middleware\CheckReceptionistOwnership::class]);
-
-// Route::middleware(['auth', 'admin'])->group(function () {
-//     Route::get('/managers', [ManagerReceptionistController::class, 'index'])->name('managers.index');
-// });
 
 // Receptionist Management routes
 Route::prefix('manager')->middleware(['auth', 'role:manager'])->group(function () {
@@ -132,9 +110,6 @@ Route::prefix('manager')->middleware(['auth', 'role:manager'])->group(function (
     Route::post('/receptionists/{receptionist}/toggle-ban', [ManagerReceptionistController::class, 'toggleBan'])
         ->name('manager.receptionists.toggle-ban');
 });
-
-// Route::post('/managers/{user}/ban', [ManagerReceptionistController::class, 'ban'])->name('managers.ban');
-
 
 // Room management routes
 Route::middleware(['auth' /*,'role:manager|admin'*/])->group(function () {
