@@ -9,6 +9,13 @@
           </Button>
         </div>
   
+        <!-- Alert for Notifications -->
+        <div v-if="alertMessage" class="space-y-4">
+          <Alert :variant="alertVariant">
+            {{ alertMessage }}
+          </Alert>
+        </div>
+  
         <!-- Form Card -->
         <Card>
           <CardHeader>
@@ -64,6 +71,35 @@
                 />
                 <p v-if="form.errors.national_id" class="text-red-500 text-sm mt-1">{{ form.errors.national_id }}</p>
               </div>
+  
+              <!-- Gender Dropdown -->
+              <div>
+                <label class="block text-sm font-medium mb-1">Gender</label>
+                <select 
+                  v-model="form.gender" 
+                  class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
+                >
+                  <option value="" disabled>Select gender</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                </select>
+                <p v-if="form.errors.gender" class="text-red-500 text-sm mt-1">{{ form.errors.gender }}</p>
+              </div>
+  
+              <!-- Country Dropdown -->
+              <div>
+                <label class="block text-sm font-medium mb-1">Country</label>
+                <select 
+                  v-model="form.country" 
+                  class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
+                >
+                  <option value="" disabled>Select country</option>
+                  <option v-for="country in countries" :key="country" :value="country">
+                    {{ country }}
+                  </option>
+                </select>
+                <p v-if="form.errors.country" class="text-red-500 text-sm mt-1">{{ form.errors.country }}</p>
+              </div>
             </form>
           </CardContent>
           <CardFooter class="flex justify-end gap-4">
@@ -74,16 +110,6 @@
               Cancel
             </Button>
           </CardFooter>
-        </Card>
-  
-        <!-- Success Message -->
-        <Card v-if="showSuccess" class="bg-green-100 text-green-700">
-          <CardContent>
-            <p> Receptionist created successfully!</p>
-            <Button as="a" href="/manager/receptionists" variant="link">
-              Back to List
-            </Button>
-          </CardContent>
         </Card>
       </div>
     </DashboardLayout>
@@ -96,22 +122,36 @@
   import { Input } from '@/components/ui/input';
   import { Button } from '@/components/ui/button';
   import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+  import { Alert } from '@/components/ui/alert'; // Import the Alert component
   
-  const showSuccess = ref(false);
+  const alertMessage = ref(null); // Message to display in the alert
+  const alertVariant = ref('success'); // Variant of the alert (success, destructive, etc.)
   
   const form = useForm({
     name: '',
     email: '',
     password: '',
     national_id: '',
+    gender: '',
+    country: '',
   });
+  
+  const countries = [
+    'United States',
+    'Canada',
+    'Egypt',
+  ];
   
   const submitForm = () => {
     form.post('/manager/receptionists', {
       onFinish: () => {
         if (Object.keys(form.errors).length === 0) {
           form.reset();
-          showSuccess.value = true;
+          alertMessage.value = 'Receptionist created successfully!';
+          alertVariant.value = 'success'; // Set alert to success
+        } else {
+          alertMessage.value = 'Failed to create receptionist. Please check the form.';
+          alertVariant.value = 'destructive'; // Set alert to error
         }
       },
     });
