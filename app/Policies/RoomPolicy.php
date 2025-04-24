@@ -12,11 +12,11 @@ class RoomPolicy
 
     public function update(User $user, Room $room)
     {
-        return $user->hasRole('admin') || $room->created_by === $user->id;
+        return $user->hasRole('Admin') || $room->created_by === $user->id;
     }
 
     public function delete(User $user, Room $room)
     {
-        return $user->hasRole('admin') || $room->created_by === $user->id;
+        return $user->hasRole('Admin') || $room->created_by === $user->id;
     }
 }

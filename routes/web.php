@@ -126,7 +126,7 @@ Route::prefix('manager')->middleware(['auth', 'role:manager'])->group(function (
 
 
 // Room management routes
-Route::middleware(['auth' /*,'role:manager|admin'*/])->group(function () {
+Route::middleware(['auth', 'role:manager|Admin'])->group(function () {
     Route::get('/dashboard/rooms', [RoomController::class, 'index'])->name('rooms.index');
     Route::get('/dashboard/rooms/create', [RoomController::class, 'create'])->name('rooms.create');
     Route::post('/dashboard/rooms', [RoomController::class, 'store'])->name('rooms.store');
