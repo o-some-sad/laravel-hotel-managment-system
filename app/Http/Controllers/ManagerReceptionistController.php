@@ -19,24 +19,46 @@ class ManagerReceptionistController extends Controller
 
     public function index()
     {
-       // $this->authorize('viewAny', User::class);
-
-        $receptionists =  User::role('receptionist')
-        ->where('created_by', Auth::id())
-        ->with(['creator' => function($query) {
-            $query->select('id', 'name');
-        }])
-            ->paginate(10);
-
-            return Inertia::render('Manager/Receptionists/Index', [
-                'receptionists' => $receptionists->through(fn($user) => [
-                    'id' => $user->id,
-                    'name' => $user->name,
-                    'email' => $user->email,
-                    'created_at' => $user->created_at->diffForHumans(),
-                    'banned_at' => $user->banned_at?->toDateTimeString(),
-                ])
-            ]);
+        // $this->authorize('viewAny', User::class);
+        
+        $user = Auth::user();
+        $isAdmin = $user->hasRole('Admin');
+        
+        // Base query
+        $query = User::role('receptionist');
+        
+        // If not admin, only show own data for receptionist
+        if ($isAdmin) {
+            // Admin can see all receptionists
+            $query->with(['creator' => function($query) {
+                $query->select('id', 'name');
+            }]);
+        } 
+        else if ($user->hasRole('manager')) {
+            // Manager can see receptionists they created
+            $query->where('created_by', $user->id)
+                ->with(['creator' => function($query) {
+                    $query->select('id', 'name');
+                }]);
+        }
+        else 
+        {
+            abort(403, 'Unauthorized action.'); // or redirect to a different page
+        }
+        
+        $receptionists = $query->paginate(10);
+        
+        return Inertia::render('Manager/Receptionists/Index', [
+            'receptionists' => $receptionists->through(fn($user) => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'created_at' => $user->created_at->diffForHumans(),
+                'banned_at' => $user->banned_at?->toDateTimeString(),
+            ]),
+            'isAdmin' => $isAdmin,
+            'userRole' => $user->roles->first()->name ?? 'none'
+        ]);
     }
 
     public function create()
@@ -48,6 +70,11 @@ class ManagerReceptionistController extends Controller
 
     public function store(Request $request)
     {
+        $myAcc = Auth::user();
+        if (!$myAcc->hasRole('Admin') && !$myAcc->hasRole('manager')) {
+            abort(403, 'Unauthorized action.');
+        }
+
        // $this->authorize('create', User::class);
         $request->validate([
             'name' => 'required|string|max:255',
@@ -84,6 +111,10 @@ class ManagerReceptionistController extends Controller
 
     public function update(Request $request, User $receptionist)
     {
+        $myAcc = Auth::user();
+        if (!$myAcc->hasRole('Admin') && !$myAcc->hasRole('manager')) {
+            abort(403, 'Unauthorized action.');
+        }
      //   $this->authorize('update', $receptionist);
         $request->validate([
             'name' => 'required|string|max:255',
@@ -114,6 +145,10 @@ class ManagerReceptionistController extends Controller
 
     public function destroy(User $receptionist)
     {
+        $myAcc = Auth::user();
+        if (!$myAcc->hasRole('Admin') && !$myAcc->hasRole('manager')) {
+            abort(403, 'Unauthorized action.');
+        }
        // $this->authorize('delete', $receptionist);
 
         if ($receptionist->avatar_image !== 'default-avatar.jpg') {
@@ -127,6 +162,10 @@ class ManagerReceptionistController extends Controller
 
     public function toggleBan(User $receptionist)
     {
+        $myAcc = Auth::user();
+        if (!$myAcc->hasRole('Admin') && !$myAcc->hasRole('manager')) {
+            abort(403, 'Unauthorized action.');
+        }
       //  $this->authorize('toggleBan', $receptionist);
     //  \Log::info('Toggling ban for user: ' . $receptionist->id);
       if ($receptionist->isBanned()) {

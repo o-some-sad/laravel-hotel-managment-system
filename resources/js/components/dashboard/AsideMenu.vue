@@ -33,7 +33,7 @@ const navigation = [
     title: 'Manager Receptionists', 
     icon: Users,
     route: route('manager.receptionists.index'),
-    active: (route) => route.includes('receptionists')
+    active: (route) => route.includes('manager.receptionists')
   },
   {
     title: 'Floors',
@@ -42,12 +42,19 @@ const navigation = [
     active: (route) => route.includes('floor')
   },
   {
-    title: 'Manage Managers',
+    title: '(Admin) Manage Managers',
     icon: Users,
     route: route('managers.index'),
     active: (route) => route.includes('managers'),
     requiresAdmin: true
   },
+  // {
+  //   title: '(Admin) Manage Receptionists',
+  //   icon: Users,
+  //   route: route('dashboard.receptionists.index'),
+  //   active: (route) => route.includes('dashboard.receptionists'),
+  //   requiresAdmin: true
+  // },
 ];
 
 const currentRoute = route().current();

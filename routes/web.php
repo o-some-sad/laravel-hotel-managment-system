@@ -93,7 +93,7 @@ Route::middleware('auth' ,'role:manager|Admin')->group(function() {
 });
 
 // Receptionist Management routes
-Route::prefix('manager')->middleware(['auth', 'role:manager'])->group(function () {
+Route::prefix('manager')->middleware(['auth', 'role:manager|Admin'])->group(function () {
     // Show Receptionist routes
     Route::get('/receptionists', [ManagerReceptionistController::class, 'index'])
         ->name('manager.receptionists.index');
