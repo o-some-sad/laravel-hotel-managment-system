@@ -7,7 +7,7 @@ import {
   Home,
   Menu,
   X,
-  Users // Add Users icon
+  Users
 } from 'lucide-vue-next';
 
 const props = defineProps({
@@ -30,6 +30,12 @@ const navigation = [
     active: (route) => route.includes('rooms')
   },
   {
+    title: 'Manager Receptionists', 
+    icon: Users,
+    route: route('manager.receptionists.index'),
+    active: (route) => route.includes('receptionists')
+  },
+  {
     title: 'Floors',
     icon: ArrowUpNarrowWide,
     route: route('floor.index'),
@@ -40,13 +46,6 @@ const navigation = [
     icon: Users,
     route: route('managers.index'),
     active: (route) => route.includes('managers'),
-    requiresAdmin: true
-  },
-  {
-    title: 'Manage Receptionists',
-    icon: Users,
-    route: route('dashboard.receptionists.index'),
-    active: (route) => route.includes('dashboard.receptionists'),
     requiresAdmin: true
   },
 ];

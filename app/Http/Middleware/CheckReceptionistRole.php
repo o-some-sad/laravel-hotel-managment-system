@@ -15,7 +15,7 @@ class CheckReceptionistRole
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!$request->user()->hasRole('receptionist')) {
+        if (!$request->user() || !$request->user()->hasRole('receptionist')) {
             abort(403);
         }
         return $next($request);

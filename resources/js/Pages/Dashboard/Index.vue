@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue';
+import { router } from '@inertiajs/vue3';
 import DashboardLayout from '@/Layouts/DashboardLayout.vue';
 import { 
   Card, 
@@ -129,3 +130,4 @@ const getStatusColor = (status) => {
     </div>
   </DashboardLayout>
 </template>
+
