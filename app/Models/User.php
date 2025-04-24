@@ -124,5 +124,14 @@ class User extends Authenticatable implements \Cog\Contracts\Ban\Bannable
      return $this->hasMany(User::class, 'manager_id');
     }
 
+    public function getAvatarUrlAttribute()
+    {
+        if ($this->avatar_image) {
+            return Storage::disk('public')->url($this->avatar_image);
+        }
+        
+        // Return default avatar
+        return asset('images/default-avatar.jpg');
+    }
 }
 

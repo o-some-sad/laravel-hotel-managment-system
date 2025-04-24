@@ -6,7 +6,8 @@ import {
   ArrowUpNarrowWide,
   Home,
   Menu,
-  X
+  X,
+  Users // Add Users icon
 } from 'lucide-vue-next';
 
 const props = defineProps({
@@ -23,16 +24,23 @@ const navigation = [
     active: (route) => route === 'dashboard'
   },
   {
-  title: 'Rooms',
+    title: 'Rooms',
     icon: Bed,
     route: route('rooms.index'),
     active: (route) => route.includes('rooms')
   },
   {
-  title: 'Floors',
+    title: 'Floors',
     icon: ArrowUpNarrowWide,
     route: route('floor.index'),
     active: (route) => route.includes('floor')
+  },
+  {
+    title: 'Manage Managers',
+    icon: Users,
+    route: route('managers.index'),
+    active: (route) => route.includes('managers'),
+    requiresAdmin: true
   },
 ];
 

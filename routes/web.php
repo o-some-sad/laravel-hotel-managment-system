@@ -135,6 +135,16 @@ Route::middleware(['auth', 'role:manager|Admin'])->group(function () {
     Route::delete('/dashboard/rooms/{room}', [RoomController::class, 'destroy'])->name('rooms.destroy');
 });
 
+// Manager routes - only accessible by admin
+Route::middleware(['auth', 'role:Admin'])->group(function () {
+    Route::get('/dashboard/managers', [ManagerController::class, 'index'])->name('managers.index');
+    Route::get('/dashboard/managers/create', [ManagerController::class, 'create'])->name('managers.create');
+    Route::post('/dashboard/managers', [ManagerController::class, 'store'])->name('managers.store');
+    Route::get('/dashboard/managers/{manager}/edit', [ManagerController::class, 'edit'])->name('managers.edit');
+    Route::put('/dashboard/managers/{manager}', [ManagerController::class, 'update'])->name('managers.update');
+    Route::delete('/dashboard/managers/{manager}', [ManagerController::class, 'destroy'])->name('managers.destroy');
+});
+
 //client reservation routes
 Route::middleware(['auth'])->group(function () {
     //	List of client's reservations
