@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Storage;
 
 
 class User extends Authenticatable implements \Cog\Contracts\Ban\Bannable
@@ -120,14 +121,14 @@ class User extends Authenticatable implements \Cog\Contracts\Ban\Bannable
      return $this->hasMany(User::class, 'manager_id');
     }
 
-    public function getAvatarUrlAttribute()
-    {
-        if ($this->avatar_image) {
-            return Storage::disk('public')->url($this->avatar_image);
-        }
+    // public function getAvatarUrlAttribute()
+    // {
+    //     if ($this->avatar_image) {
+    //         return Storage::disk('public')->url($this->avatar_image);
+    //     }
         
-        // Return default avatar
-        return asset('images/default-avatar.jpg');
-    }
+    //     // Return default avatar
+    //     return asset('images/default-avatar.jpg');
+    // }
 }
 
