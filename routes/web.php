@@ -50,12 +50,6 @@ Route::middleware('guest')->group(function () {
 
 Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
-Route::middleware(['auth', 'admin'])->group(function () {
-    Route::get('/managers', [ManagerReceptionistController::class, 'index'])->name('managers.index');
-});
-
-
-Route::middleware(['auth', 'role:receptionist'])->group(function () {
     // Pending clients route
     Route::get('/clients/pending', [ReceptionistController::class, 'pendingClients'])
         ->name('receptionist.pending-clients');
@@ -71,6 +65,21 @@ Route::middleware(['auth', 'role:receptionist'])->group(function () {
     // Clients reservations route
     Route::get('/clients/reservations', [ReceptionistController::class, 'clientsReservations'])
         ->name('receptionist.clients-reservations');
+
+//});
+
+Route::middleware('auth')->group(function() {
+
+    Route::get('/floors', [FloorManagerController::class,'index'])->name('floor.index');});
+Route::middleware('auth')->group(function(){
+    Route::get('/addFloor', [FloorManagerController::class,'create'])->name('floor.create');
+});
+Route::middleware('auth')->group(function () {
+    Route::post('/storeFloor', [FloorManagerController::class, 'store'])->name('floor.store');
+});
+Route::middleware('auth')->group(function(){
+    Route::get('/editFloor/{id}', [FloorManagerController::class,'edit'])->name('floor.edit');
+
 });
 
 Route::middleware('auth' ,'role:manager|Admin')->group(function() {
@@ -82,19 +91,6 @@ Route::middleware('auth' ,'role:manager|Admin')->group(function() {
     Route::put('/dashboard/updateFloor/{id}', [FloorManagerController::class, 'update'])->name('floor.update');
     Route::delete('/dashboard/delFloor/{id}', [FloorManagerController::class, 'delete'])->name('floor.delete');
 });
-
-
-// Route::prefix('manager')->middleware(['auth', 'role:manager'])->group(function () {
-//     Route::resource('receptionists', ManagerReceptionistController::class)->except(['show']);
-//     Route::post('/receptionists/{receptionist}/toggle-ban', [ManagerReceptionistController::class, 'toggleBan'])->name('receptionists.toggle-ban');
-// });
-
-// Route::get('/receptionists/{user}', function (User $user) {
-//     return Inertia::render('Receptionist/Show', [
-//         'receptionist' => $user
-//     ]);
-// })->middleware(['auth', \App\Http\Middleware\CheckReceptionistOwnership::class]);
-
 
 // Receptionist Management routes
 Route::prefix('manager')->middleware(['auth', 'role:manager'])->group(function () {
@@ -120,11 +116,8 @@ Route::prefix('manager')->middleware(['auth', 'role:manager'])->group(function (
 
     // Ban Receptionist routes
     Route::post('/receptionists/{receptionist}/toggle-ban', [ManagerReceptionistController::class, 'toggleBan'])
-        ->name('receptionists.toggle-ban');
+        ->name('manager.receptionists.toggle-ban');
 });
-
-// Route::post('/managers/{user}/ban', [ManagerReceptionistController::class, 'ban'])->name('managers.ban');
-
 
 // Room management routes
 Route::middleware(['auth', 'role:manager|Admin'])->group(function () {

@@ -26,11 +26,12 @@ class CreateBansTable extends Migration
     {
         Schema::create('bans', function (Blueprint $table) {
             $table->increments('id');
-            $table->morphs('bannable');
+            $table->foreignId('user_id')->nullable()->constrained()->cascadeOnDelete();
             $table->nullableMorphs('created_by');
             $table->text('comment')->nullable();
             $table->timestamp('expired_at')->nullable();
             $table->softDeletes();
+            $table->morphs('bannable');
             $table->timestamps();
 
             $table->index('expired_at');
@@ -47,3 +48,5 @@ class CreateBansTable extends Migration
         Schema::dropIfExists('bans');
     }
 }
+
+

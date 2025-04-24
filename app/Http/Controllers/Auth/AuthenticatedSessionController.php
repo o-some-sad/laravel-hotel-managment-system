@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Inertia\Response;
+use App\Models\User;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -35,8 +36,20 @@ class AuthenticatedSessionController extends Controller
         
         // Update the last_login_at timestamp for the authenticated user
         $user = Auth::user();
-        $user->last_login_at = now();
-        $user->save();
+
+        if ($user instanceof \App\Models\User) {
+            $user->last_login_at = now();
+            $user->save();
+        }
+
+        // if ($user->hasRole('admin')) {
+        //     return redirect()->route('managers.index');
+        // } elseif ($user->hasRole('manager')) {
+        //     return redirect()->route('manager.receptionists.index');
+        // } elseif ($user->hasRole('receptionist')) {
+        //     return redirect()->route('receptionist.pending-clients');
+        // }
+        
 
         return redirect('/user/dashboard');
     }

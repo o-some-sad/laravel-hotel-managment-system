@@ -11,6 +11,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+
 class User extends Authenticatable implements \Cog\Contracts\Ban\Bannable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
@@ -84,11 +85,6 @@ class User extends Authenticatable implements \Cog\Contracts\Ban\Bannable
     public function reservations()
     {
         return $this->hasMany(Reservation::class, 'client_id');
-    }
-
-    public function bans()
-    {
-        return $this->hasMany(Ban::class);
     }
 
     public function manager()

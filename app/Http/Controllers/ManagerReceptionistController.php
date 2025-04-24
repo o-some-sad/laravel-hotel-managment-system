@@ -10,13 +10,17 @@ use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Storage;
+use App\Services\BanService;
+use Illuminate\Support\Facades\Log;
 
 class ManagerReceptionistController extends Controller
 {
     use AuthorizesRequests;
+
     public function index()
     {
-        $this->authorize('viewAny', User::class);
+       // $this->authorize('viewAny', User::class);
+
         $receptionists =  User::role('receptionist')
         ->where('created_by', Auth::id())
         ->with(['creator' => function($query) {
@@ -37,14 +41,14 @@ class ManagerReceptionistController extends Controller
 
     public function create()
     {
-        $this->authorize('create', User::class);
+       // $this->authorize('create', User::class);
          return Inertia('Manager/Receptionists/Create');
         
     }
 
     public function store(Request $request)
     {
-        $this->authorize('create', User::class);
+       // $this->authorize('create', User::class);
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users',
@@ -64,20 +68,15 @@ class ManagerReceptionistController extends Controller
         ]);
 
         $user->assignRole('receptionist');
-        
-        if ($request->hasFile('avatar_image')) {
-            $user->avatar_image = $request->file('avatar_image')->store('avatars');
-        } else {
-            $user->avatar_image = 'default-avatar.jpg'; 
-        }
+
         $user->save();
 
-        return redirect()->route('manager.receptionists.index');
+        return redirect()->route('manager.receptionists.index')->with('success', 'Receptionist created!');
     }
 
     public function edit(User $receptionist)
     {
-        $this->authorize('update', $receptionist);
+       // $this->authorize('update', $receptionist);
         return Inertia('Manager/Receptionists/Edit', [
         'receptionist' => $receptionist
         ]);
@@ -85,7 +84,7 @@ class ManagerReceptionistController extends Controller
 
     public function update(Request $request, User $receptionist)
     {
-        $this->authorize('update', $receptionist);
+     //   $this->authorize('update', $receptionist);
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $receptionist->id,
@@ -93,8 +92,6 @@ class ManagerReceptionistController extends Controller
             'password' => 'nullable|string|min:6',
             'avatar_image' => 'nullable|image|mimes:jpg,jpeg,png',
         ]);
-
-        $receptionist->update($request->except('avatar'));
 
         if ($request->hasFile('avatar_image')) {
             if ($receptionist->avatar_image !== 'default-avatar.jpg') {
@@ -112,14 +109,12 @@ class ManagerReceptionistController extends Controller
             'avatar_image' => $avatarPath,
         ]);
 
-        $receptionist->save();
-
         return redirect()->route('manager.receptionists.index');
     }
 
     public function destroy(User $receptionist)
     {
-        $this->authorize('delete', $receptionist);
+       // $this->authorize('delete', $receptionist);
 
         if ($receptionist->avatar_image !== 'default-avatar.jpg') {
             Storage::disk('public')->delete($receptionist->avatar_image);
@@ -132,8 +127,17 @@ class ManagerReceptionistController extends Controller
 
     public function toggleBan(User $receptionist)
     {
-        $this->authorize('toggleBan', $receptionist);
-        $receptionist->isBanned() ? $receptionist->unban() : $receptionist->ban();
-        return redirect()->back();
+      //  $this->authorize('toggleBan', $receptionist);
+    //  \Log::info('Toggling ban for user: ' . $receptionist->id);
+      if ($receptionist->isBanned()) {
+        $receptionist->unban();
+    } else {
+        $receptionist->ban([
+            'user_id' => Auth::id(), // Set the banning user
+            'comment' => 'Banned by manager',
+        ]);
+    }
+
     }
 }
+

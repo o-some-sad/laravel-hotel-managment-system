@@ -47,4 +47,9 @@ return [
 
     'redirect_url' => '/banned',
 
+    'models' => [
+    'ban' => \Cog\Laravel\Ban\Models\Ban::class,
+    'user' => \App\Models\User::class,
+],
+
 ];
