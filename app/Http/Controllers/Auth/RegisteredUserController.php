@@ -62,7 +62,7 @@ class RegisteredUserController extends Controller
 
         event(new Registered($user));
 
-        Auth::login($user);
+        // Auth::login($user); // prevent login automatically after registration
 
         return redirect('/');
     }
