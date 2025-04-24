@@ -19,7 +19,7 @@ class RoomController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $isAdmin = $user->hasRole('admin');
+        $isAdmin = $user->hasRole('Admin');
        
         // If admin, show all rooms with manager info
         // If manager, show only rooms created by this manager
@@ -31,7 +31,7 @@ class RoomController extends Controller
             $query->with('creator');
         }
         
-        $rooms = $query->get();
+        $rooms = $query->paginate(12);
         
         return Inertia::render('Dashboard/Rooms/Index', [
             'rooms' => $rooms,

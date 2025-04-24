@@ -72,7 +72,7 @@ Route::middleware(['auth', 'role:receptionist'])->group(function () {
         ->name('receptionist.clients-reservations');
 });
 
-Route::middleware('auth'/*,'role:manager|admin'*/)->group(function() {
+Route::middleware('auth' ,'role:manager|Admin')->group(function() {
     Route::post('/managers/{user}/ban', [ManagerController::class, 'ban'])->name('managers.ban');
     Route::get('/dashboard/floors', [FloorManagerController::class,'index'])->name('floor.index');
     Route::get('/dashboard/addFloor', [FloorManagerController::class,'create'])->name('floor.create');
