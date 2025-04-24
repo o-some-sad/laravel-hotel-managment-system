@@ -17,14 +17,14 @@ class Floor extends Model
      
     }
 
-    public function delete()
-    {
-    // can't delete a floor if there are rooms in it
-    if ($this->rooms()->exists()) {
-        throw new \Exception('Cannot delete floor with rooms');
-        }
-        parent::delete();
-    }
+    // public function delete()
+    // {
+    // // can't delete a floor if there are rooms in it
+    // if ($this->rooms()->exists()) {
+    //     throw new \Exception('Cannot delete floor with rooms');
+    //     }
+    //     parent::delete();
+    // }
 
     public function creator()
     {

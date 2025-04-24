@@ -109,7 +109,7 @@ const submit = () => {
                                 :class="{ 'border-destructive': form.errors.country }">
                                 <option value="" disabled>Select a country</option>
                                 <option v-for="country in countries" :key="country.id" :value="country.id">
-                                    {{ country.official_name }}
+                                    {{ country.name }}
                                 </option>
                             </select>
                             <p v-if="form.errors.country" class="text-sm text-destructive mt-1">

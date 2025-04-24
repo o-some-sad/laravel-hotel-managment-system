@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from '@inertiajs/vue3';
 import {
   Bed,
+  ArrowUpNarrowWide,
   Home,
   Menu,
   X,
@@ -23,7 +24,7 @@ const navigation = [
     active: (route) => route === 'dashboard'
   },
   {
-  title: 'Rooms',
+    title: 'Rooms',
     icon: Bed,
     route: route('rooms.index'),
     active: (route) => route.includes('rooms')
@@ -33,6 +34,19 @@ const navigation = [
     icon: Users,
     route: route('manager.receptionists.index'),
     active: (route) => route.includes('receptionists')
+  },
+  {
+    title: 'Floors',
+    icon: ArrowUpNarrowWide,
+    route: route('floor.index'),
+    active: (route) => route.includes('floor')
+  },
+  {
+    title: 'Manage Managers',
+    icon: Users,
+    route: route('managers.index'),
+    active: (route) => route.includes('managers'),
+    requiresAdmin: true
   },
 ];
 

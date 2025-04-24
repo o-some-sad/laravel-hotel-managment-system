@@ -2,7 +2,7 @@
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ChevronRight } from 'lucide-vue-next';
-import { PaginationNext } from 'radix-vue';
+import { PaginationNext } from 'reka-ui';
 import { computed } from 'vue';
 
 const props = defineProps({

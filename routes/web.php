@@ -1,17 +1,20 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReservationController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\ManagerController;
 use App\Http\Controllers\ReceptionistController;
+use App\Http\Controllers\ManageReceptionistController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\FloorManagerController;
 use App\Http\Controllers\ManagerReceptionistController;
 use App\Models\User;
 use Spatie\Permission\Middleware\RoleMiddleware;
 use App\Http\Controllers\RoomController;
+use App\Http\Controllers\StripeController;
 
 
 
@@ -47,7 +50,6 @@ Route::middleware('guest')->group(function () {
 
 Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
-//Route::middleware(['auth', 'receptionist'])->group(function () {
     // Pending clients route
     Route::get('/clients/pending', [ReceptionistController::class, 'pendingClients'])
         ->name('receptionist.pending-clients');
@@ -63,6 +65,7 @@ Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name(
     // Clients reservations route
     Route::get('/clients/reservations', [ReceptionistController::class, 'clientsReservations'])
         ->name('receptionist.clients-reservations');
+
 //});
 
 Route::middleware('auth')->group(function() {
@@ -76,12 +79,17 @@ Route::middleware('auth')->group(function () {
 });
 Route::middleware('auth')->group(function(){
     Route::get('/editFloor/{id}', [FloorManagerController::class,'edit'])->name('floor.edit');
+
 });
-Route::middleware('auth')->group(function () {
-    Route::put('/updateFloor/{id}', [FloorManagerController::class, 'update'])->name('floor.update');
-});
-Route::middleware('auth')->group(function () {
-    Route::delete('/delFloor/{id}', [FloorManagerController::class, 'delete'])->name('floor.delete');
+
+Route::middleware('auth' ,'role:manager|Admin')->group(function() {
+    Route::post('/managers/{user}/ban', [ManagerController::class, 'ban'])->name('managers.ban');
+    Route::get('/dashboard/floors', [FloorManagerController::class,'index'])->name('floor.index');
+    Route::get('/dashboard/addFloor', [FloorManagerController::class,'create'])->name('floor.create');
+    Route::post('/dashboard/storeFloor', [FloorManagerController::class, 'store'])->name('floor.store');
+    Route::get('/dashboard/editFloor/{id}', [FloorManagerController::class, 'edit'])->name('floor.edit');
+    Route::put('/dashboard/updateFloor/{id}', [FloorManagerController::class, 'update'])->name('floor.update');
+    Route::delete('/dashboard/delFloor/{id}', [FloorManagerController::class, 'delete'])->name('floor.delete');
 });
 
 // Receptionist Management routes
@@ -112,7 +120,7 @@ Route::prefix('manager')->middleware(['auth', 'role:manager'])->group(function (
 });
 
 // Room management routes
-Route::middleware(['auth' /*,'role:manager|admin'*/])->group(function () {
+Route::middleware(['auth', 'role:manager|Admin'])->group(function () {
     Route::get('/dashboard/rooms', [RoomController::class, 'index'])->name('rooms.index');
     Route::get('/dashboard/rooms/create', [RoomController::class, 'create'])->name('rooms.create');
     Route::post('/dashboard/rooms', [RoomController::class, 'store'])->name('rooms.store');
@@ -120,6 +128,54 @@ Route::middleware(['auth' /*,'role:manager|admin'*/])->group(function () {
     Route::put('/dashboard/rooms/{room}', [RoomController::class, 'update'])->name('rooms.update');
     Route::delete('/dashboard/rooms/{room}', [RoomController::class, 'destroy'])->name('rooms.destroy');
 });
+
+// Manager routes - only accessible by admin
+Route::middleware(['auth', 'role:Admin'])->group(function () {
+    Route::get('/dashboard/managers', [ManagerController::class, 'index'])->name('managers.index');
+    Route::get('/dashboard/managers/create', [ManagerController::class, 'create'])->name('managers.create');
+    Route::post('/dashboard/managers', [ManagerController::class, 'store'])->name('managers.store');
+    Route::get('/dashboard/managers/{manager}/edit', [ManagerController::class, 'edit'])->name('managers.edit');
+    Route::put('/dashboard/managers/{manager}', [ManagerController::class, 'update'])->name('managers.update');
+    Route::delete('/dashboard/managers/{manager}', [ManagerController::class, 'destroy'])->name('managers.destroy');
+});
+
+//client reservation routes
+Route::middleware(['auth'])->group(function () {
+    //	List of client's reservations
+    Route::get('/client/reservations', [ReservationController::class, 'index'])
+        ->name('client.reservations.index');
+    //List of available rooms
+    Route::get('/client/rooms', [ReservationController::class, 'availableRooms'])
+        ->name('reservations.index');
+    //Form to type accompany number and pay
+    Route::get('/client/reservations/rooms/{room}', [ReservationController::class, 'create'])
+        ->name('reservations.create');
+        Route::post('/reservations/rooms/{room}', [ReservationController::class, 'store'])->name('reservations.store');
+});
+
+// Admin-only Receptionist Management routes
+Route::middleware(['auth', 'role:Admin'])->prefix('dashboard')->group(function () {
+    // Receptionists routes
+    Route::get('/receptionists', [ManageReceptionistController::class, 'adminIndex'])
+        ->name('dashboard.receptionists.index');
+    Route::get('/receptionists/create', [ManageReceptionistController::class, 'adminCreate'])
+        ->name('dashboard.receptionists.create');
+    Route::post('/receptionists', [ManageReceptionistController::class, 'adminStore'])
+        ->name('dashboard.receptionists.store');
+    Route::get('/receptionists/{receptionist}/edit', [ManageReceptionistController::class, 'adminEdit'])
+        ->name('dashboard.receptionists.edit');
+    Route::put('/receptionists/{receptionist}', [ManageReceptionistController::class, 'adminUpdate'])
+        ->name('dashboard.receptionists.update');
+    Route::delete('/receptionists/{receptionist}', [ManageReceptionistController::class, 'adminDestroy'])
+        ->name('dashboard.receptionists.destroy');
+  
+});
+
+
+// Route::get('/checkout', [StripeController::class, 'showCheckout'])->name('stripe.checkout');
+Route::get('/create-checkout-session/{reservation}', [StripeController::class, 'createCheckoutSession'])->name('stripe.session');
+Route::get('/success', [StripeController::class, 'success'])->name('stripe.success');
+Route::get('/cancel', [StripeController::class, 'cancel'])->name('stripe.cancel');
 
 require __DIR__.'/auth.php';
 
