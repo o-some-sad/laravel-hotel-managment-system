@@ -15,7 +15,7 @@ services:
       - key: APP_ENV
         value: production
       - key: APP_URL
-        value: https://laravel-hotel-system.onrender.com # You will update this after deployment
+        value: https://laravel-hotel-system.onrender.com
       - key: DB_CONNECTION
         value: pgsql
       - key: DB_HOST
@@ -39,10 +39,9 @@ services:
           name: hotel-db
           property: password
 
+databases:
   # The Database (PostgreSQL)
-  - type: psql
-    name: hotel-db
-    env: docker
+  - name: hotel-db
     plan: free
     databaseName: hotel_db
     user: hotel_user
