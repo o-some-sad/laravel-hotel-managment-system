@@ -6,7 +6,6 @@ services:
     plan: free
     region: oregon # or frankfurt, etc.
     buildCommand: docker build -t laravel-app .
-    startCommand: ./docker-entrypoint.sh
     envVars:
       - key: APP_KEY
         generateValue: true
