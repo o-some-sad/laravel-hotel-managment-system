@@ -1,0 +1,48 @@
+services:
+  # The Web Server (Laravel App)
+  - type: web
+    name: laravel-hotel-system
+    env: docker
+    plan: free
+    region: oregon # or frankfurt, etc.
+    buildCommand: docker build -t laravel-app .
+    startCommand: ./docker-entrypoint.sh
+    envVars:
+      - key: APP_KEY
+        generateValue: true
+      - key: APP_DEBUG
+        value: false
+      - key: APP_ENV
+        value: production
+      - key: APP_URL
+        value: https://laravel-hotel-system.onrender.com # You will update this after deployment
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_HOST
+        fromDatabase:
+          name: hotel-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: hotel-db
+          property: port
+      - key: DB_DATABASE
+        fromDatabase:
+          name: hotel-db
+          property: database
+      - key: DB_USERNAME
+        fromDatabase:
+          name: hotel-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: hotel-db
+          property: password
+
+  # The Database (PostgreSQL)
+  - type: psql
+    name: hotel-db
+    env: docker
+    plan: free
+    databaseName: hotel_db
+    user: hotel_user
