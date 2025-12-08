@@ -17,9 +17,9 @@ class DatabaseSeeder extends Seeder
     {
 
         $this->call([
-          //  AdminSeeder::class,
-            RoleSeeder::class,
+            \Lwwcas\LaravelCountries\Database\Seeders\LwwcasDatabaseSeeder::class,
             RolesAndPermissionsSeeder::class,  
+            AdminSeeder::class,
         ]);
         // $this->call([
         //     RoleSeeder::class,

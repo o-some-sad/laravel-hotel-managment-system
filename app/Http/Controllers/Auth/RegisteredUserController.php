@@ -57,6 +57,7 @@ class RegisteredUserController extends Controller
             'country_code' => $request['country'],
             'gender' => $request['gender'],
             'avatar_image' => $avatarPath,
+            
         ]);
         $user->assignRole('client');
 
