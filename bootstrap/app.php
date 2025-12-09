@@ -12,15 +12,14 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        $middleware->trustProxies(at: [
+            '*',
+        ]);
         $middleware->web(append: [
             \App\Http\Middleware\HandleInertiaRequests::class,
             \Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class,
             // CheckReceptionistRole::class
         ]);
-
-        // Trust all proxies for Render
-        $middleware->trustProxies(at: '*');
-
         $middleware->alias( [
             
          //   'receptionist' => \App\Http\Middleware\CheckReceptionistRole::class,
